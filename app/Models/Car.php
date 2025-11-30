@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Modification;
+use App\Models\Story;
+use App\Models\Type;
+use App\Models\Tag;
+
+class Car extends Model
+{
+    /** @use HasFactory<\Database\Factories\CarFactory> */
+    use HasFactory;
+
+    public function owner() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function modifications() {
+        return $this->hasMany(Modification::class);
+    }
+
+    public function story() {
+        return $this->hasOne(Story::class);
+    }
+
+    public function types() {
+        return $this->belongsToMany(Type::class);
+    }
+
+    public function tags() {
+        return $this->belongsToMany(Tag::class);
+    }
+}
