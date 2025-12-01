@@ -14,7 +14,7 @@ class Modification extends Model
 
     //belongs to car
     public function owner() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, "user_id");
     }
 
     public function car() {

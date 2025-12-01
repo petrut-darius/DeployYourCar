@@ -19,13 +19,14 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         //to do create basic tags and types
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Petrut Darius',
             'email' => 'eminoviciidarius@gmail.com',
             "password" => "30ianpdi"
         ]);
 
         $users = User::factory(20)->create();
+        $users->push($user);
 
         $users->each(function ($user) {
             $cars = Car::factory(rand(1, 3))->create(['user_id' => $user->id]);

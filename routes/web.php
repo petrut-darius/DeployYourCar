@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Car;
+use App\Http\Resources\CarResource;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -15,10 +16,12 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get("/test", function() {
-    $first_car = Car::first();
+Route::get("/cars/{car}", function(Car $car) {
+    $car->load(['owner', 'modifications', 'story', 'tags', 'types']);
 
-    dd($first_car->modifications);
+    return Inertia::render("Cars/Show", [
+        "car" => CarResource::make($car), 
+    ]);
 });
 
 Route::get('/dashboard', function () {
