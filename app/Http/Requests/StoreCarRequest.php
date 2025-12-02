@@ -22,7 +22,26 @@ class StoreCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "manufacture" => "required|string",
+            "model" => "required|string",
+            "displacement" => "required|string",
+            "engineCode" => "required|string",
+            "whp" => "required|integer",
+            "color" => "required|string",
+
+            "modifications" => "nullable|array",
+            "modifications.*.name" => "required|string|max:20",
+            "modifications.*.description" => "nullable|string",
+            "modifications.*.reason" => "required|string",
+
+            "tags" => "nullable|array",
+            "tags.*.id" => "required|integer",
+
+            "types" => "nullable|array",
+            "types.*.id" => "required|integer",
+
+            "storyBodyText" => "required|string",
+            "storyBodyHtml" => "required|string"
         ];
     }
 }

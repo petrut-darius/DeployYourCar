@@ -22,7 +22,26 @@ class UpdateCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "manufacture" => "sometimes|string",
+            "model" => "sometimes|string",
+            "displacement" => "sometimes|string",
+            "engineCode" => "sometimes|string",
+            "whp" => "sometimes|integer",
+            "color" => "sometimes|string",
+
+            "modifications" => "nullable|array",
+            "modifications.*.name" => "sometimes|string|max:20",
+            "modifications.*.description" => "nullable|string",
+            "modifications.*.reason" => "sometimes|string",
+
+            "tags" => "nullable|array",
+            "tags.*.id" => "sometimes|integer",
+
+            "types" => "nullable|array",
+            "types.*.id" => "sometimes|integer",
+
+            "storyBodyText" => "sometimes|string",
+            "storyBodyHtml" => "sometimes"
         ];
     }
 }

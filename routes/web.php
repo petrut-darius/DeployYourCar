@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Car;
 use App\Http\Resources\CarResource;
+use App\Http\Controllers\CarController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -23,6 +24,10 @@ Route::get("/cars/{car}", function(Car $car) {
         "car" => CarResource::make($car), 
     ]);
 });
+
+
+
+Route::resource("/cars", CarController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
