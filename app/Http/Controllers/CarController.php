@@ -16,10 +16,17 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::with(['owner', 'tags', 'types'])->get();
+        $cars = Car::with([
+            'owner',
+            'tags',
+            'types',
+            'modifications',
+            'story'
+        ])->paginate(10);
+
 
         return Inertia::render("Cars/Index", [
-            "cars" => CarResource::collection($cars), 
+            "cars" => CarResource::collection($cars),
         ]);
     }
 

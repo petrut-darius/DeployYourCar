@@ -1,13 +1,14 @@
 <script setup>
+import Pagination from '@/Components/Pagination.vue';
+
 defineProps({
-    cars: Array
+    cars: Object
 })
 </script>
 
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <div v-for="car in cars.data" :key="car.id"class="p-4 rounded-lg shadow bg-white">
+    <div class="flex flex-col items-center">
+        <div v-for="car in cars.data" :key="car.id"class="p-4 rounded-lg shadow bg-gray-400 flex flex-col justify-center w-3/4 mb-2 ">
             <h2 class="text-xl font-semibold">
                 <a :href='route("cars.show", { car: car.id})'>{{ car.manufacture }} {{ car.model }}</a>
             </h2>
@@ -58,6 +59,8 @@ defineProps({
             </div>
             -->
         </div>
-
+        <div class="flaot-end">
+            <Pagination class="mt-4" :links="cars.meta.links"/>
+        </div>
     </div>
 </template>
