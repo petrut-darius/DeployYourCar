@@ -1,10 +1,13 @@
 <script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
+
 defineProps({
     car: Object
 });
 </script>
 <template>
-    <div class="flex flex-col items-center">
+  <AppLayout>
+    <div class="flex flex-col items-center py-4">
       <div class="text-center text-5xl">
         {{ car.data.manufacture }} {{ car.data.model }}
       </div>
@@ -12,7 +15,7 @@ defineProps({
         <p>Owner: <b>{{ car.data.owner.name }}</b></p>
       </div>
 
-      <div class="bg-gray-400 p-4 rounded-lg shadow">
+      <div v-if="car.data.modifications && car.data.modifications.length" class="bg-gray-400 p-4 rounded-lg shadow">
         <h2 class="text-center text-2xl">Modifications</h2>
 
         <li v-for="mod in car.data.modifications" :key="mod.id" class="list-none">
@@ -25,11 +28,10 @@ defineProps({
           </div>
         </li>
       </div>
-      <div>
+      <div v-if="car.data.story">
         <h2>Story</h2>
         <p>{{ car.data.story.bodyHtml }}</p>
       </div>
-    
-    
     </div>
+  </AppLayout>
 </template>

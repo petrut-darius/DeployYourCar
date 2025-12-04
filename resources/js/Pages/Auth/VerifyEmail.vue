@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
@@ -22,7 +22,7 @@ const verificationLinkSent = computed(
 </script>
 
 <template>
-    <GuestLayout>
+    <AppLayout>
         <Head title="Email Verification" />
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
@@ -57,5 +57,5 @@ const verificationLinkSent = computed(
                 >
             </div>
         </form>
-    </GuestLayout>
+    </AppLayout>
 </template>
