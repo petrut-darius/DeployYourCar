@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
 use App\Http\Resources\CarResource;
+use App\Models\Tag;
+use App\Models\Type;
 
 class CarController extends Controller
 {
@@ -34,7 +36,10 @@ class CarController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render("Cars/Create", [
+            "tags" => Tag::select("id", "name")->get(),
+            "types" => Type::select("id", "name")->get(),
+        ]);
     }
 
     /**

@@ -39,9 +39,7 @@ function logout() {
         <div v-if="user" class="flex items-center space-x-4">
 
             <!-- Create new (+) -->
-            <button class="relative py-1 px-2 bg-pink-400 border rounded hover:text-white">
-                Add Car
-            </button>
+            <Link :href='route("cars.create")' class="relative py-1 px-2 bg-pink-400 border rounded hover:text-white">Add Car</Link>
 
             <form @click="logout">
                 <DangerButton class="relative py-1 px-2 border rounded">Log out!</DangerButton>
