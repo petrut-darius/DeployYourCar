@@ -23,7 +23,7 @@ const form = useForm({
     tags: [],
     types: [],
     story: "Write your cars story, how did you got it?",
-    media: null
+    photos: []
 });
 
 const submit = () => {
@@ -124,7 +124,7 @@ const submit = () => {
                 <input
                     type="file"
                     multiple
-                    @change="e => form.media = e.target.files"
+                    @change="e => form.photos = Array.from(e.target.files)"
                     class="block mt-1"
                     rules="mimes:jpg"
                 />

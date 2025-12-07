@@ -11,9 +11,25 @@ use App\Models\Type;
 use App\Models\Tag;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Car extends Model implements HasMedia
 {
+    protected $fillable = [
+        "user_id",
+        "manufacture",
+        "model",
+        "displacement",
+        "engine_code",
+        "whp",
+        "color",
+    ];
+
+    public function registerMediaConversions(?Media $media = null):void {
+        $this->addMediaConversion("show_page")->width(900)->height(600)->sharpen(30);
+    }
+
     /** @use HasFactory<\Database\Factories\CarFactory> */
     use HasFactory, InteractsWithMedia;
 

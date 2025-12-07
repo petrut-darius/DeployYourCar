@@ -8,6 +8,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Car;
 use App\Models\Story;
 use App\Models\Modification;
+use App\Models\Tag;
+use App\Models\Type;
 
 class DatabaseSeeder extends Seeder
 {
@@ -47,5 +49,13 @@ class DatabaseSeeder extends Seeder
 
             $story->save();
         });
+
+        Tag::create([
+            "name" => "test_tag",
+        ]);
+
+        Type::create([
+            "name" => "test_type",
+        ]);
     }
 }

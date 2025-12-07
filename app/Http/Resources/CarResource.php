@@ -8,6 +8,7 @@ use App\Http\Resources\ModificatPionResource;
 use App\Http\Resources\StoryResource;
 use App\Http\Resources\TagResource;
 use App\Http\Resources\TypeResource;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class CarResource extends JsonResource
 {
@@ -23,7 +24,7 @@ class CarResource extends JsonResource
             "manufacture" => $this->manufacture,
             "model" => $this->model,
             "displacement" => $this->displacement,
-            "engine_code" => $this->engine_code,
+            "engineCode" => $this->engine_code,
             "whp" => $this->whp,
             "color" => $this->color,
             "owner" => [
@@ -34,6 +35,14 @@ class CarResource extends JsonResource
             "story" => $this->story ? StoryResource::make($this->story) : null,
             "tags" => $this->tags ? TagResource::collection($this->tags) : null,
             "types" => $this->types ? TypeResource::collection($this->types) : null,
+
+            "photos" => $this->getMedia("photos")->map(function (Media $media) {
+                return [
+                    "id" => $media->id,
+                    "original_url" => $media->getUrl(),
+                    "show_url" => $media->getUrl("show_page")
+                ];
+            }),
         ];
     }
 }

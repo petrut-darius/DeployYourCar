@@ -7,7 +7,7 @@ defineProps({
 </script>
 <template>
   <AppLayout>
-    <div class="flex flex-col items-center py-4">
+    <div class="flex flex-col items-center py-4 bg-gray-400">
       <div class="text-center text-5xl">
         {{ car.data.manufacture }} {{ car.data.model }}
       </div>
@@ -29,9 +29,14 @@ defineProps({
         </li>
       </div>
       <div v-if="car.data.story">
-        <h2>Story</h2>
-        <p>{{ car.data.story.bodyHtml }}</p>
+        <div class="prose max-w-none" v-html="car.data.story.bodyHtml"></div>
       </div>
+      <div>
+          <div v-for="photo in car.data.photos" :key="photo.id" class="mt-2">
+            <img :src="photo.original_url" class="rounded shadow"/>
+          </div>
+      </div>
+
     </div>
   </AppLayout>
 </template>

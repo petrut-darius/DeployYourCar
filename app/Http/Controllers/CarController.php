@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateCarRequest;
 use App\Http\Resources\CarResource;
 use App\Models\Tag;
 use App\Models\Type;
+use Illuminate\Support\Facades\Auth;
 
 class CarController extends Controller
 {
@@ -47,7 +48,39 @@ class CarController extends Controller
      */
     public function store(StoreCarRequest $request)
     {
-        //
+        //dd($request);
+        $car = Car::create([
+            "user_id" => Auth::id(),
+            "manufacture" => $request->manufacture,
+            "model" => $request->model,
+            "displacement" => $request->displacement,
+            "engine_code" => $request->engineCode,
+            "whp" => $request->whp,
+            "color" => $request->color,
+        ]);
+
+        $car->story()->create([
+            "user_id" => $car->user_id,
+            "body_html" => $request->story,
+        ]);
+
+        $car->tags()->sync($request->input("tags", []));
+        $car->types()->sync($request->input("types", []));
+
+        $photos = $request->file('photos');
+
+        if ($photos && !is_array($photos)) {
+            $photos = [$photos];
+        }
+
+        if ($photos) {
+            foreach ($photos as $photo) {
+                $car->addMedia($photo)->toMediaCollection('photos', "public");
+            }
+        }
+
+        return redirect()->route("cars.show", ["car" => $car]);
+        //return redirect_to("cars.index");
     }
 
     /**
@@ -55,7 +88,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        $car->load(['owner', 'modifications', 'story', 'tags', 'types']);
+        $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
 
         return Inertia::render("Cars/Show", [
             "car" => CarResource::make($car), 

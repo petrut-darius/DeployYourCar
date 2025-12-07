@@ -11,7 +11,7 @@ class StoreCarRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -35,15 +35,14 @@ class StoreCarRequest extends FormRequest
             "modifications.*.reason" => "required|string",
 
             "tags" => "nullable|array",
-            "tags.*.id" => "required|integer",
+            "tags.*" => "integer",
 
             "types" => "nullable|array",
-            "types.*.id" => "required|integer",
+            "types.*" => "integer",
 
-            "storyBodyText" => "required|string",
-            "storyBodyHtml" => "required|string",
+            "story" => "required|string",
 
-            "photos" => "required",
+            "photos" => "nullable|array",
             "photos.*" => "image|mimes:png,jpg,jpeg|max:5120"
         ];
     }

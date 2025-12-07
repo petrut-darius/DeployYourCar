@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Car::class)->constrained()->cascadeOnDelete();
-            $table->longText("body_text");
+            $table->longText("body_text")->nullable();
             $table->longText("body_html");
             $table->timestamps();
         });
