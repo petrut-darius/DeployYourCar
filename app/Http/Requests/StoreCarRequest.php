@@ -41,7 +41,10 @@ class StoreCarRequest extends FormRequest
             "types.*.id" => "required|integer",
 
             "storyBodyText" => "required|string",
-            "storyBodyHtml" => "required|string"
+            "storyBodyHtml" => "required|string",
+
+            "photos" => "required",
+            "photos.*" => "image|mimes:png,jpg,jpeg|max:5120"
         ];
     }
 }

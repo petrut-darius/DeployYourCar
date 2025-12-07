@@ -45,7 +45,7 @@ class CarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCarRequest $request)
     {
         //
     }
@@ -60,6 +60,8 @@ class CarController extends Controller
         return Inertia::render("Cars/Show", [
             "car" => CarResource::make($car), 
         ]);
+
+        //cross site pt car->story cu purify
     }
 
     /**

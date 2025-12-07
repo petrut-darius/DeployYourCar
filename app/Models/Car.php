@@ -9,11 +9,13 @@ use App\Models\Modification;
 use App\Models\Story;
 use App\Models\Type;
 use App\Models\Tag;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Car extends Model
+class Car extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\CarFactory> */
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     public function owner() {
         return $this->belongsTo(User::class, "user_id");
