@@ -15,25 +15,34 @@ defineProps({
         <p>Owner: <b>{{ car.data.owner.name }}</b></p>
       </div>
 
-      <div v-if="car.data.modifications && car.data.modifications.length" class="bg-gray-400 p-4 rounded-lg shadow">
-        <h2 class="text-center text-2xl">Modifications</h2>
+      <div v-if="car.data.modifications && car.data.modifications.length" class="w-full max-w-3xl p-6 rounded-xl shadow mt-6 bg-gray-600">
+        <h2 class="text-center text-3xl font-bold mb-6 text-white">Modifications</h2>
 
-        <li v-for="mod in car.data.modifications" :key="mod.id" class="list-none">
-          <div>
-            <p>Name: <b>{{ mod.name }}</b></p>
-            <div>
-              <p>Reason: <b>{{ mod.reason }}</b></p>
-              <p>Description: <b>{{ mod.description }}</b></p>
+        <div class="space-y-4">
+          <div v-for="mod in car.data.modifications" :key="mod.id" class="border border-gray-200 bg-gray-50 p-4 rounded-lg shadow-sm">
+            <h3 class="text-xl font-semibold text-gray-800"> {{ mod.name }} </h3>
+
+            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <p class="text-gray-600 text-sm font-medium">Reason:</p>
+                <p class="font-semibold text-gray-800">{{ mod.reason }}</p>
+              </div>
+
+              <div>
+                <p class="text-gray-600 text-sm font-medium">Description:</p>
+                <p class="font-semibold text-gray-800"> {{ mod.description || '—' }} </p>
+              </div>
             </div>
           </div>
-        </li>
+        </div>
       </div>
-      <div v-if="car.data.story">
-        <div class="prose max-w-none" v-html="car.data.story.bodyHtml"></div>
+      <div v-if="car.data.story" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
+        <h2 class="text-center text-3xl font-bold mb-6 text-white">Story of the car</h2>
+        <div class="prose border border-gray-200 bg-gray-50 p-4 rounded-lg shadow-sm m-auto" v-html="car.data.story.bodyHtml"></div>
       </div>
       <div>
-          <div v-for="photo in car.data.photos" :key="photo.id" class="mt-2">
-            <img :src="photo.original_url" class="rounded shadow"/>
+          <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
+            <img :src="photo.show_url" class="rounded shadow"/>
           </div>
       </div>
 

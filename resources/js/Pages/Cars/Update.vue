@@ -10,43 +10,15 @@ import { ref } from "vue";
 
 const page = usePage()
 const user = page.props.auth.user
-const tags = page.props.tags
-const types = page.props.types
+const car = page.props.car
 
-const form = useForm({
-    manufacture: "",
-    model: "",
-    displacement: "",
-    engineCode: "",
-    whp: "",
-    color: "",
-    tags: [],
-    types: [],
-    story: "Write your cars story, how did you got it?",
-    photos: [],
-    modifications: [
-        { name: "", description: "", reason: "" }
-    ]
-});
+//ref -> o variabila care ia valoarea atuncia nu dupa submit
+//computed -> o variabila calculata din alte variabile, care odata ce vede ca o variabila s-o schimbat e updata si ea
 
-const submit = () => {
-    form.post(route("cars.store"), {
-        preserveScroll: true,
-        forceFormData: true,
-    });
-};
-
-const addModification = () => {
-    form.modifications.push({
-        name: "",
-        description: "",
-        reason: ""
-    });
-};
 
 </script>
 <template>
-    <AppLayout>
+    <AppLayout>//sa poti sa editezi doar modificarile culoarea whp codmotor litraj tags types story poze
         <form @submit.prevent="submit" class=" mx-auto">
             <div class="mt-4">
                 <InputLabel for="manufacture" value="Manufacture" />

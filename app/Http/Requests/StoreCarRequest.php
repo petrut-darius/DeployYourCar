@@ -22,23 +22,23 @@ class StoreCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "manufacture" => "required|string",
-            "model" => "required|string",
-            "displacement" => "required|string",
+            "manufacture" => "required|string|max:50",
+            "model" => "required|string|max:50",
+            "displacement" => "required|numeric",
             "engineCode" => "required|string",
             "whp" => "required|integer",
-            "color" => "required|string",
+            "color" => "required|string|max:50",
 
             "modifications" => "nullable|array",
-            "modifications.*.name" => "required|string|max:20",
-            "modifications.*.description" => "nullable|string",
-            "modifications.*.reason" => "required|string",
+            "modifications.*.name" => "required|string|max:255",
+            "modifications.*.description" => "nullable|string|max:255",
+            "modifications.*.reason" => "required|string|max:255",
 
             "tags" => "nullable|array",
-            "tags.*" => "integer",
+            "tags.*" => "integer|exists:tags,id",
 
             "types" => "nullable|array",
-            "types.*" => "integer",
+            "types.*" => "integer|exists:types,id",
 
             "story" => "required|string",
 

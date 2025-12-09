@@ -64,6 +64,17 @@ class CarController extends Controller
             "body_html" => $request->story,
         ]);
 
+        if($request->filled("modifications")) {
+            foreach($request->input("modifications") as $mod) {
+                $car->modifications()->create([
+                    "user_id" => $car->user_id,
+                    "name" => $mod["name"],
+                    "description" => $mod["description"] ?? null,
+                    "reason" => $mod["reason"],
+                ]);
+            }
+        }
+
         $car->tags()->sync($request->input("tags", []));
         $car->types()->sync($request->input("types", []));
 
@@ -102,7 +113,9 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
-        //
+        return Inertia::render("Cars/Update", [
+            "car" => CarResource::make($car),
+        ]);
     }
 
     /**

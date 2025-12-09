@@ -27,7 +27,7 @@ class Car extends Model implements HasMedia
     ];
 
     public function registerMediaConversions(?Media $media = null):void {
-        $this->addMediaConversion("show_page")->width(900)->height(600)->sharpen(30);
+        $this->addMediaConversion("show_page")->width(600);
     }
 
     /** @use HasFactory<\Database\Factories\CarFactory> */

@@ -11,6 +11,13 @@ class Modification extends Model
 {
     /** @use HasFactory<\Database\Factories\ModificationFactory> */
     use HasFactory;
+    protected $fillable = [
+        "user_id",
+        "name",
+        "description",
+        "reason"
+    ];
+
 
     //belongs to car
     public function owner() {
