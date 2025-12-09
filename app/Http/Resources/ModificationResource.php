@@ -19,20 +19,6 @@ class ModificationResource extends JsonResource
             "name" => $this->name,
             "description" => $this->description ? $this->description : "The owner did not set a description" ,
             "reason" => $this->reason,
-            "car" => [
-                "id" => $this->car->id,
-                "manufacture" => $this->car->manufacture,
-                "model" => $this->car->model,
-                "displacement" => $this->car->displacement,
-                "engine_code" => $this->car->engine_code,
-                "whp" => $this->car->whp,
-                "color" => $this->car->color,
-            ],
-            "owner" => [
-                "id" => $this->owner->id,
-                "name" => $this->owner->name,
-                "email" => $this->owner->email,
-            ]
         ];
     }
 }

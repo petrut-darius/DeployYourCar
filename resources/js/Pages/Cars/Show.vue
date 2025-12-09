@@ -1,15 +1,23 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-
+import { Link, usePage, router } from '@inertiajs/vue3'
 defineProps({
     car: Object
 });
+
+const page = usePage()
+const user = page.props.auth.user
+
 </script>
 <template>
   <AppLayout>
-    <div class="flex flex-col items-center py-4 bg-gray-400">
+    <div class="flex flex-col items-center py-4 bg-gray-400 pt-6 rounded">
       <div class="text-center text-5xl">
         {{ car.data.manufacture }} {{ car.data.model }}
+      </div>
+      <div v-if="user.id == car.data.owner.id">
+          <Link :href='route("cars.edit", car.data.id)' as="button" class="py-1 px-2 bg-pink-400 border rounded hover:text-white">Edit</Link>
+          <Link :href='route("cars.destroy", car.data.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
       </div>
       <div>
         <p>Owner: <b>{{ car.data.owner.name }}</b></p>
@@ -40,6 +48,7 @@ defineProps({
         <h2 class="text-center text-3xl font-bold mb-6 text-white">Story of the car</h2>
         <div class="prose border border-gray-200 bg-gray-50 p-4 rounded-lg shadow-sm m-auto" v-html="car.data.story.bodyHtml"></div>
       </div>
+      //make delete photo button (routes, controller, call from vue)
       <div>
           <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
             <img :src="photo.show_url" class="rounded shadow"/>

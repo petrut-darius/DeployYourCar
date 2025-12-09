@@ -11,10 +11,46 @@ import { ref } from "vue";
 const page = usePage()
 const user = page.props.auth.user
 const car = page.props.car
+const tags = page.props.tags
+const types = page.props.types
+
+const form = useForm({
+    manufacture: car.data.manufacture ?? "",
+    model: car.data.model ?? "",
+    displacement: car.data.displacement.toString() ?? "",
+    engineCode: car.data.engineCode ?? "",
+    whp: car.data.whp.toString() ?? "",
+    color: car.data.color ?? "",
+    tags: car.data.tags?.map(t => t.id) ?? [],
+    types: car.data.types?.map(t => t.id) ?? [],
+    story: car.data.story.bodyHtml ?? "plm",
+    photos: [],
+    modifications: car.data.modifications ?? [
+        { name: "", description: "", reason: "" }
+    ]
+});
+
+const addModification = () => {
+    form.modifications.push({
+        name: "",
+        description: "",
+        reason: ""
+    });
+};
 
 //ref -> o variabila care ia valoarea atuncia nu dupa submit
 //computed -> o variabila calculata din alte variabile, care odata ce vede ca o variabila s-o schimbat e updata si ea
 
+//un ref pt area pe care o editezi ca sa poti sa dai focus
+//o computed ca sa poti sa zici daca o valoare este editata
+//functia insine de patch pt click
+//functie pt cancelEdit la orice
+//functie pt aratarea valorii vechi la orice
+
+
+//o ba gen, tre sa fac o functie care sa vada cand am schimbat valoarea astfel incat sa stie sa o baga in parametrii noi ai folmularului
+//o functie care sa stearga o modificare
+//o functie care sa 
 
 </script>
 <template>

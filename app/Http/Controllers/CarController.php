@@ -113,8 +113,12 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
+        $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
+
         return Inertia::render("Cars/Update", [
             "car" => CarResource::make($car),
+            "tags" => Tag::select("id", "name")->get(),
+            "types" => Type::select("id", "name")->get(),
         ]);
     }
 
@@ -131,6 +135,6 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        dd($car);
     }
 }
