@@ -32,6 +32,15 @@ class CarController extends Controller
         ]);
     }
 
+    public function yourCars() {
+        $user = Auth::user();
+        $cars = Car::where("user_id", $user->id)->with(["owner", "tags", "types", "modifications", "story"])->orderBy("id", "desc")->get();
+
+        return Inertia::render("Cars/yourCars", [
+            "yourCars" => CarResource::collection($cars),
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
