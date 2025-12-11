@@ -1,13 +1,20 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Link, usePage, router } from '@inertiajs/vue3'
+import { Link, usePage, useForm, router } from '@inertiajs/vue3'
 defineProps({
     car: Object
 });
 
 const page = usePage()
 const user = page.props.auth.user
-
+    
+const deletePhoto = (carId, photoId) => {
+    router.delete(route("cars.destroyPhoto", {car: carId, photo: photoId}), {
+        preserveScroll: true,
+        forceFormData: true,
+    })
+};
+    
 </script>
 <template>
   <AppLayout>
@@ -52,6 +59,10 @@ const user = page.props.auth.user
       <div>
           <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
             <img :src="photo.show_url" class="rounded shadow"/>
+              //make this DangerButton
+            <form @submit.prevent="deletePhoto(car.id, photo.id)" method="delete">
+                <button type="submit">Delete photo</button>
+            </form>
           </div>
       </div>
 
