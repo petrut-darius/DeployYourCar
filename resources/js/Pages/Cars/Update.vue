@@ -38,20 +38,19 @@ const addModification = () => {
     });
 };
 
+const deleteModification = (index) => {
+    form.modifications.splice(index, 1);
+};
+
+const submit = () => {
+    form.put(route("cars.update"), {
+        preserveScroll: true,
+        forceFormData: true
+    });
+};
+    
 //ref -> o variabila care ia valoarea atuncia nu dupa submit
 //computed -> o variabila calculata din alte variabile, care odata ce vede ca o variabila s-o schimbat e updata si ea
-
-//un ref pt area pe care o editezi ca sa poti sa dai focus
-//o computed ca sa poti sa zici daca o valoare este editata
-//functia insine de patch pt click
-//functie pt cancelEdit la orice
-//functie pt aratarea valorii vechi la orice
-
-
-//o ba gen, tre sa fac o functie care sa vada cand am schimbat valoarea astfel incat sa stie sa o baga in parametrii noi ai folmularului
-//o functie care sa stearga o modificare
-//o functie care sa 
-
 </script>
 <template>
     <AppLayout>//sa poti sa editezi doar modificarile culoarea whp codmotor litraj tags types story poze
@@ -111,7 +110,7 @@ const addModification = () => {
                     <h3 class="text-lg font-semibold text-gray-700">
                         Modification {{ index + 1 }}
                     </h3>
-
+                        //number-to-words aicia la erori
                     <div>
                         <InputLabel :for="'name-' + index" value="Modification Name" />
                         <TextInput type="text" v-model="mod.name" class="mt-1 block w-full" :id="'name-' + index"/>
@@ -129,8 +128,12 @@ const addModification = () => {
                         <TextInput type="text" v-model="mod.reason" class="mt-1 block w-full" :id="'reason-' + index"/>
                         <InputError :message="form.errors[`modifications.${index}.reason`]" />
                     </div>
-                </div>
 
+                    <div>
+                        <button type="button" @click="deleteModification(index)">Delete this modification</button>
+                    </div>
+                    
+                </div>
 
                 <button type="button" @click="addModification" class="btn btn-primary ml-2 text-purple-400">
                     Add another modification
