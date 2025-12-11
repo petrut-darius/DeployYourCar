@@ -34,7 +34,13 @@ class CarController extends Controller
 
     public function yourCars() {
         $user = Auth::user();
-        $cars = Car::where("user_id", $user->id)->with(["owner", "tags", "types", "modifications", "story"])->orderBy("id", "desc")->get();
+        $cars = Car::orderBy("id", "desc")->where("user_id", $user->id)->with([
+            "owner",
+            "tags",
+            "types",
+            "modifications",
+            "story",
+        ])->paginate(10);
 
         return Inertia::render("Cars/yourCars", [
             "yourCars" => CarResource::collection($cars),
@@ -134,9 +140,52 @@ class CarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Car $car)
+    public function update(UpdateCarRequest $request, Car $car)
     {
-        //
+        //dd($request, $car);
+
+        $car->update([
+            "manufacture" => $request->manufacture,
+            "model" => $request->model,
+            "displacement" => $request->displacement,
+            "engine_code" => $request->engineCode,
+            "whp" => $request->whp,
+            "color" => $request->color,
+        ]);
+
+        $car->story()->update([
+            "body_html" => $request->story,
+        ]);
+
+        if($request->filled("modifications")) {
+            $car->modifications()->delete();
+
+            foreach($request->input("modifications") as $mod) {
+                $car->modifications()->create([
+                    "user_id" => $car->user_id,
+                    "name" => $mod["name"],
+                    "description" => $mod["description"] ?? null,
+                    "reason" => $mod["reason"],
+                ]);
+            }
+        }
+
+        $car->tags()->sync($request->input("tags", []));
+        $car->types()->sync($request->input("types", []));
+
+        $photos = $request->file('photos');
+
+        if ($photos && !is_array($photos)) {
+            $photos = [$photos];
+        }
+
+        if ($photos) {
+            foreach ($photos as $photo) {
+                $car->addMedia($photo)->toMediaCollection('photos', "public");
+            }
+        }
+
+        return redirect()->route("cars.show", ["car" => $car]);
     }
 
     /**
@@ -144,6 +193,21 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        dd($car);
+        $car->delete();
+
+        return redirect()->route("cars.index");
+    }
+
+    public function destroyPhoto(Car $car, $photo_id) {
+        //dd($car->id, $photo_id);
+        $media = $car->media()->where("id", $photo_id)->where("collection_name", "photos")->first();
+    
+        if(!$media) {
+            abort(404, "Photo not found");
+        }
+
+        $media->delete();
+
+        return redirect("cars.update", ["car" => $car]);
     }
 }

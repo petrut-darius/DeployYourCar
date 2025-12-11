@@ -11,7 +11,7 @@ class UpdateCarRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,26 +22,28 @@ class UpdateCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "manufacture" => "sometimes|string",
-            "model" => "sometimes|string",
-            "displacement" => "sometimes|string",
+            "manufacture" => "sometimes|string|max:50",
+            "model" => "sometimes|string|max:50",
+            "displacement" => "sometimes|numeric",
             "engineCode" => "sometimes|string",
             "whp" => "sometimes|integer",
-            "color" => "sometimes|string",
+            "color" => "sometimes|string|max:50",
 
             "modifications" => "nullable|array",
-            "modifications.*.name" => "sometimes|string|max:20",
-            "modifications.*.description" => "nullable|string",
-            "modifications.*.reason" => "sometimes|string",
+            "modifications.*.name" => "sometimes|string|max:255",
+            "modifications.*.description" => "nullable|string|max:255",
+            "modifications.*.reason" => "sometimes|string|max:255",
 
             "tags" => "nullable|array",
-            "tags.*.id" => "sometimes|integer",
+            "tags.*" => "integer|exists:tags,id",
 
             "types" => "nullable|array",
-            "types.*.id" => "sometimes|integer",
+            "types.*" => "integer|exists:types,id",
 
-            "storyBodyText" => "sometimes|string",
-            "storyBodyHtml" => "sometimes"
+            "story" => "sometimes|string",
+
+            "photos" => "nullable|array",
+            "photos.*" => "image|mimes:png,jpg,jpeg|max:51"
         ];
     }
 }

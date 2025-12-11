@@ -5,8 +5,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Tiptap from '@/Components/Tiptap.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm, usePage } from '@inertiajs/vue3'
-import { ref } from "vue";
+import { useForm, usePage, router } from '@inertiajs/vue3';
+import DangerButton from '@/Components/DangerButton.vue';
 
 const page = usePage()
 const user = page.props.auth.user
@@ -17,13 +17,13 @@ const types = page.props.types
 const form = useForm({
     manufacture: car.data.manufacture ?? "",
     model: car.data.model ?? "",
-    displacement: car.data.displacement.toString() ?? "",
+    displacement: car.data.displacement?.toString() ?? "",
     engineCode: car.data.engineCode ?? "",
-    whp: car.data.whp.toString() ?? "",
+    whp: car.data.whp?.toString() ?? "",
     color: car.data.color ?? "",
     tags: car.data.tags?.map(t => t.id) ?? [],
     types: car.data.types?.map(t => t.id) ?? [],
-    story: car.data.story.bodyHtml ?? "plm",
+    story: car.data.story?.bodyHtml ?? "plm",
     photos: [],
     modifications: car.data.modifications ?? [
         { name: "", description: "", reason: "" }
@@ -43,17 +43,37 @@ const deleteModification = (index) => {
 };
 
 const submit = () => {
-    form.put(route("cars.update"), {
+    form.transform(data => ({
+        ...data,
+        _method: "PUT",
+    })).post(route("cars.update", car.data.id), {
         preserveScroll: true,
         forceFormData: true
     });
+};
+
+function confirmation(message) {
+    return new Promise((resolve) => {
+        resolve(window.confirm(message));
+    });
+}
+
+const deletePhoto = async (carId, photoId) => {
+    if(! await confirmation("do you want to delete this photo?")) {
+        return;
+    }
+
+    router.delete(route("cars.destroyPhoto", {car: carId, photo: photoId}), {
+        preserveScroll: true,
+        forceFormData: true,
+    })
 };
     
 //ref -> o variabila care ia valoarea atuncia nu dupa submit
 //computed -> o variabila calculata din alte variabile, care odata ce vede ca o variabila s-o schimbat e updata si ea
 </script>
 <template>
-    <AppLayout>//sa poti sa editezi doar modificarile culoarea whp codmotor litraj tags types story poze
+    <AppLayout>
         <form @submit.prevent="submit" class=" mx-auto">
             <div class="mt-4">
                 <InputLabel for="manufacture" value="Manufacture" />
@@ -186,9 +206,22 @@ const submit = () => {
                 <InputError :message="form.errors.photos" class="mt-2"/>
             </div>
 
+            <div class="mt-4">
+                <h2 class="text-center mb-4">Photos already published</h2>
+
+                <div class="flex flex-col items-center text-center">
+                    <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
+                        <img :src="photo.show_url" class="rounded shadow mx-auto" />
+                        <DangerButton @click="deletePhoto(car.data.id, photo.id)" class="mt-6">
+                            Delete photo
+                        </DangerButton>
+                    </div>
+                </div>
+            </div>
+
             <div class="mt-4 flex items-center justify-center">
-                <PrimaryButton class="ml-4 !text-white !bg-green-400 hover:!bg-green-800" :class="{'opacity-25': form.processing}" :disabled="form.processing">
-                    Add Car
+                <PrimaryButton class=" !text-white !bg-green-400 hover:!bg-green-800" :class="{'opacity-25': form.processing}" :disabled="form.processing">
+                    Update Car
                 </PrimaryButton>
             </div>
         </form>

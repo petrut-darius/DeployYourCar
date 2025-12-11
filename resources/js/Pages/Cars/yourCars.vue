@@ -64,7 +64,7 @@ defineProps({
                 -->
             </div>
             <div class="flaot-end">
-                <Pagination class="mt-4" :links="cars.meta.links"/>
+                <Pagination class="mt-4" :links="yourCars.meta.links"/>
             </div>
         </div>
     </AppLayout>

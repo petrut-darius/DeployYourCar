@@ -21,7 +21,7 @@ function logout() {
             <!-- Desktop Nav Links -->
             <div class="hidden md:flex items-center space-x-4">
                 <NavLink :href='route("cars.index")' :active="route().current('cars.index')">Cars</NavLink>
-                <NavLink v-if="user" :href='route("cars.index")' :active="route().current('cars.index')">Your Cars</NavLink>
+                <NavLink v-if="user" :href='route("cars.yourCars")' :active="route().current('cars.yourCars')">Your Cars</NavLink>
                 <NavLink :href='route("cars.index")' :active="route().current('cars.explore')">Explore</NavLink>
             </div>
 
