@@ -69,7 +69,7 @@ const deletePhoto = async (carId, photoId) => {
     })
 };
     
-//ref -> o variabila care ia valoarea atuncia nu dupa submit
+//ref -> o variabila care ia valoarea atunca nu dupa submit, updatata live
 //computed -> o variabila calculata din alte variabile, care odata ce vede ca o variabila s-o schimbat e updata si ea
 </script>
 <template>

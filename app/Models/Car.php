@@ -13,9 +13,12 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Laravel\Scout\Searchable;
 
 class Car extends Model implements HasMedia
 {
+    use Searchable;
+
     protected $fillable = [
         "user_id",
         "manufacture",
@@ -25,6 +28,20 @@ class Car extends Model implements HasMedia
         "whp",
         "color",
     ];
+
+    public function toSearchableArray(): array {
+        return [
+            "manufacture" => $this->manufacture,
+            "model" => $this->model,
+            "modifications" => $this->modifications->pluck( "name")->toArray(),
+            "tags" => $this->tags->pluck( "name")->toArray(),
+            "types" => $this->types->pluck( "name")->toArray(),
+        ];
+    }
+
+    public function searchableAs(): string {
+        return "cars_index";
+    }
 
     public function registerMediaConversions(?Media $media = null):void {
         $this->addMediaConversion("show_page")->width(600);

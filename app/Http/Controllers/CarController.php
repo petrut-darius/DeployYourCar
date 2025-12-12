@@ -210,4 +210,47 @@ class CarController extends Controller
 
         return redirect("cars.update", ["car" => $car]);
     }
+
+    public function filters() {
+        return response()->json([
+            "tags" => Tag::all(),
+            "types" => Type::all()
+        ]);
+    }
+
+public function search(Request $request) {
+    $query = $request->input('q', '');
+    
+    $tagIds = $request->input('tags', []); 
+    $tagIds = is_array($tagIds) ? $tagIds : explode(',', $tagIds);
+
+    $typeIds = $request->input('types', []); 
+    $typeIds = is_array($typeIds) ? $typeIds : explode(',', $typeIds);
+
+    $cars = Car::with(['modifications', 'tags', 'types'])
+        ->when($query, function ($q) use ($query) {
+            $q->where(function ($q2) use ($query) {
+                $q2->where('manufacture', 'like', "%{$query}%")
+                   ->orWhere('model', 'like', "%{$query}%")
+                   ->orWhereHas('modifications', function($q3) use ($query) {
+                       $q3->where('name', 'like', "%{$query}%");
+                   });
+            });
+        })
+        ->when($tagIds, function ($q) use ($tagIds) {
+            $q->whereHas('tags', function($q2) use ($tagIds) {
+                $q2->whereIn('id', $tagIds);
+            });
+        })
+        ->when($typeIds, function ($q) use ($typeIds) {
+            $q->whereHas('types', function($q2) use ($typeIds) {
+                $q2->whereIn('id', $typeIds);
+            });
+        })
+        ->orderBy('id', 'desc')
+        ->get();
+
+    return response()->json($cars);
+}
+
 }

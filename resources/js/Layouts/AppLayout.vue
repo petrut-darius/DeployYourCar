@@ -2,13 +2,85 @@
 import DangerButton from '@/Components/DangerButton.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { usePage, router, Link } from '@inertiajs/vue3'
+import { ref, onMounted, watch, computed } from 'vue';
+import axios from 'axios';
+import _ from 'lodash';
 
-const page = usePage()
-const user = page.props.auth.user
+const page = usePage();
+const user = page.props.auth.user;
 
 function logout() {
-    router.post(route("logout"));
+  router.post(route("logout"));
 }
+
+// Search
+const searchQuery = ref("");
+const searchResults = ref([]);
+const tagsList = ref([]);
+const typesList = ref([]);
+const selectedTags = ref([]);
+const selectedTypes = ref([]);
+const dropdownOpen = ref(false);
+
+// Fetch filters
+const fetchFilters = async () => {
+  try {
+    const response = await axios.get(route("cars.filters"));
+    tagsList.value = response.data.tags;
+    typesList.value = response.data.types;
+  } catch (error) {
+    console.error("Error fetching filters:", error);
+  }
+};
+
+onMounted(() => {
+  fetchFilters();
+});
+
+// Debounced search
+const fetchSearchResults = _.debounce(async () => {
+  if (
+    searchQuery.value.trim() === "" &&
+    selectedTags.value.length === 0 &&
+    selectedTypes.value.length === 0
+  ) {
+    searchResults.value = [];
+    return;
+  }
+
+  try {
+    const response = await axios.get(route("cars.search"), {
+      params: {
+        q: searchQuery.value,
+        tags: selectedTags.value,  // use IDs
+        types: selectedTypes.value // use IDs
+      },
+    });
+    searchResults.value = response.data;
+    dropdownOpen.value = true;
+  } catch (error) {
+    console.error("Search error:", error);
+    searchResults.value = [];
+    dropdownOpen.value = false;
+  }
+}, 300);
+
+watch([searchQuery, selectedTags, selectedTypes], fetchSearchResults);
+
+// Computed to show dropdown
+const showDropdown = computed(() => {
+  return dropdownOpen.value && (searchResults.value.length > 0 || selectedTags.value.length > 0 || selectedTypes.value.length > 0);
+});
+
+// Close dropdown when clicking outside
+const onClickOutside = (event) => {
+  if (!event.target.closest("#search-dropdown")) {
+    dropdownOpen.value = false;
+  }
+};
+onMounted(() => {
+  document.addEventListener("click", onClickOutside);
+});
 </script>
 
 <template>
@@ -25,14 +97,79 @@ function logout() {
                 <NavLink :href='route("cars.index")' :active="route().current('cars.explore')">Explore</NavLink>
             </div>
 
-            <!-- Search -->
-            <div class="hidden md:block">
+        <div class="relative w-64">
+            <!-- Search input -->
             <input
-                type="text"
-                placeholder="Search or jump to…"
-                class="bg-gray-800 border border-gray-700 rounded-md px-3 py-1 text-sm placeholder-gray-400 focus:ring-2 focus:ring-blue-600 focus:outline-none w-64"
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search cars..."
+            class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            @focus="dropdownOpen = true"
             />
+
+            <!-- Dropdown -->
+            <div
+            v-if="showDropdown"
+            id="search-dropdown"
+            class="absolute top-full left-0 mt-1 p-3 bg-gray-700 rounded-lg shadow-md flex flex-col gap-3 w-full z-20"
+            >
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2">
+                <span class="font-semibold text-gray-200">Tags:</span>
+                <span
+                v-for="tag in tagsList"
+                :key="tag.id"
+                class="flex items-center bg-gray-600 text-gray-200 rounded-full px-2 py-1 text-xs hover:bg-blue-500 cursor-pointer transition-colors"
+                >
+                <input
+                    type="checkbox"
+                    :value="tag.id"
+                    v-model="selectedTags"
+                    class="mr-1 w-3 h-3 accent-blue-500"
+                />
+                {{ tag.name }}
+                </span>
             </div>
+
+            <!-- Types -->
+            <div class="flex flex-wrap gap-2">
+                <span class="font-semibold text-gray-200">Types:</span>
+                <span
+                v-for="type in typesList"
+                :key="type.id"
+                class="flex items-center bg-gray-600 text-gray-200 rounded-full px-2 py-1 text-xs hover:bg-blue-500 cursor-pointer transition-colors"
+                >
+                <input
+                    type="checkbox"
+                    :value="type.id"
+                    v-model="selectedTypes"
+                    class="mr-1 w-3 h-3 accent-blue-500"
+                />
+                {{ type.name }}
+                </span>
+            </div>
+
+            <!-- Search Results -->
+            <div v-if="searchResults.length > 0" class="max-h-64 overflow-auto border border-gray-600 rounded mt-2">
+                <div
+                v-for="car in searchResults"
+                :key="car.id"
+                class="p-2 hover:bg-gray-600 cursor-pointer"
+                >
+                <Link :href="`/cars/${car.id}`" class="block text-white">
+                    {{ car.manufacture }} {{ car.model }}
+                </Link>
+                <small class="text-gray-400 block">
+                    Modifications: {{ car.modifications.map(m => m.name).join(', ') }}
+                </small>
+                </div>
+            </div>
+
+            <div v-else-if="searchResults.length === 0 && (searchQuery || selectedTags.length || selectedTypes.length)" class="p-2 text-gray-400">
+                No cars found
+            </div>
+            </div>
+        </div>
         </div>
 
         <!-- Right Section -->
