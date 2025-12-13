@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    //ce valori sa ia live si ii zice si tipu de data gen array/string/boolean/int/etc.
+    protected $attributes = [
+        "permissions" => "[]",
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -38,17 +43,60 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    //ce tip de date sa dea
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            "permissions" => "array"
         ];
     }
 
-    //superadmin has tag, type
+    public function getAllPermissions() {
 
-    //has car, modification, story
+        //Context = sesiune
+        if(Auth::user()->id === $this->id && Context::hasHidden("permissions")) {
+            return Context::getHidden("permissions");
+        }
+
+        //ia permisiunile de la fiecare group al userului
+        $groupPermissions = $this->groups()->with("permissions")->get()->pluck("permissions")->flatten()->pluck("name");
+    
+        $permissions = collect($this->permissions);
+
+        return $groupPermissions->merge($permissions)->unique()->map(function($permission) {
+            return strtolower($permission);
+        }); 
+    }
+
+    public function hasPermission($permission) {
+        if($permission instanceof \BackedEnum) {
+            $permission = $permission->value;
+        }
+
+        return $this->getAllPermissions()->contains(strtolower($permission));
+    }
+
+    public function hasAnyPermission($permissions) {
+
+        //loop peste permisiuni sa le ia valoarea
+        $perms = array_map(function($value) {
+            if($value instanceof \BackedEnum) {
+                $value = $value->value;
+            }
+
+            return strtolower($value);
+        }, $permissions);
+
+        //verifica daca permisiunile date se afla in permisiunile din db
+        return $this->getAllPermissions()->intersect($perms)->isNotEmpty();
+    }
+
+    public function groups() {
+        return $this->belongsToMany(Group::class);
+    }
+
     public function cars() {
         return $this->hasMany(Car::class);
     }
