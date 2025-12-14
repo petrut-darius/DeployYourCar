@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use App\Models\User;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -29,11 +32,24 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        Gate::define("manage-users", function(User $user) {
+            return $user->hasPermission("user:create");
+        });
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                "can" => [
+                    "manageUsers" => Auth::check() && Gate::allows("manage-users")
+                ],
             ],
         ];
+
+        logger([
+            'user' => Auth::user()?->id,
+            'has_permission' => Auth::user()?->hasPermission('user:create'),
+            'gate_allows' => Gate::allows('manage-users'),
+        ]);
     }
 }

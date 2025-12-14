@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use App\CarPermissions;
 
-class rPolicy
+class CarPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -30,7 +30,7 @@ class rPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function createCar(User $user): bool
+    public function create(User $user): Response
     {
         //duce la modeulu car
         return $user->hasPermission(CarPermissions::CRETE) ? Respnese::allow() : Response::denyAsNotFound();
@@ -39,10 +39,10 @@ class rPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function updateCar(User $user, Car $car): bool
+    public function update(User $user, Car $car): Response
     {
         if($user->id !== $car->owner->id) {
-            return $user->hasPermissions(CarPermissions::UPDATE_ANY) ? Response::allow() : Response::denyAsNotFound();
+            return $user->hasPermission(CarPermissions::UPDATE_ANY) ? Response::allow() : Response::denyAsNotFound();
         }
 
         return $user->hasPermission(CarPermissions::UPDATE) && $user->id === $car->owner->id ? Response::allow() : Response::denyAsNotFound();
@@ -51,7 +51,7 @@ class rPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function deleteCar(User $user, Car $car): bool
+    public function delete(User $user, Car $car): Response
     {
         if($user->id !== $car->owner->id) {
             return $user->hasPermissions(CarPermissions::DELETE_ANY) ? Response::allow() : Response::denyAsNotFound();

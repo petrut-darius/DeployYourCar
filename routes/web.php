@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Car;
 use App\Http\Resources\CarResource;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\UsersController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -19,6 +20,7 @@ Route::get('/', function () {
 
 Route::get("/cars/search", [CarController::class, "search"])->name("cars.search");
 Route::get("/cars/filters", [CarController::class, "filters"])->name("cars.filters");
+Route::resource("/cars", CarController::class)->only(["index", "show"]);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -29,7 +31,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource("/cars", CarController::class);
+    //maybe..
+    Route::middleware("can:manage-users")->prefix("admin")->group(function() {
+        Route::resource('users', UsersController::class)->except(['show', 'create', 'store']);
+        Route::resource("permissions", PermissionsController::class)->except(["show"]);
+        Route::resource("groups", GroupsController::class)->except(["show"]);
+    });
+
+
+    //okey
+    Route::resource("/cars", CarController::class)->except(["index", "show"]);
     Route::get("/yourCars", [CarController::class, "yourCars"])->name("cars.yourCars");
     Route::delete("/cars/{car}/photo/{photo}", [CarController::class, "destroyPhoto"])->name("cars.destroyPhoto");
 });

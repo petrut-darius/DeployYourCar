@@ -11,6 +11,7 @@ use App\Http\Resources\CarResource;
 use App\Models\Tag;
 use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
+use App\CarAbilities;
 
 class CarController extends Controller
 {
@@ -117,7 +118,10 @@ class CarController extends Controller
         $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
 
         return Inertia::render("Cars/Show", [
-            "car" => CarResource::make($car), 
+            "car" => CarResource::make($car),
+            "can" => [
+                "update" => auth()->user() ? auth()->user()->can(CarAbilities::UPDATE->value, $car) : false,
+            ],
         ]);
 
         //cross site pt car->story cu purify

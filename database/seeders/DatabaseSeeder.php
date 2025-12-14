@@ -10,6 +10,7 @@ use App\Models\Story;
 use App\Models\Modification;
 use App\Models\Tag;
 use App\Models\Type;
+use App\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,17 +19,65 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        Permission::insert([
+            ["name" => "car:create", "description" => "Create car"],
+            ["name" => "car:update", "description" => "Update car"],
+            ["name" => "car:update_any", "description" => "Update any car"],
+            ["name" => "car:delete", "description" => "Delete car"],
+            ["name" => "car:delete-any", "description" => "Delete any car"],
+            ["name" => "user:create", "description" => "Create user"],
+            ["name" => "permission:create", "descritpion" => "Create permission"],
+        ]);
 
-        //to do create basic tags and types
-        $user = User::factory()->create([
-            'name' => 'Petrut Darius',
+        $adminUser = User::factory()->create([
+            'name' => 'thepdi',
             'email' => 'eminoviciidarius@gmail.com',
-            "password" => "30ianpdi"
+            "password" => "30ianpdi",
+            "permissions" => [
+                "car:create",
+                "car:update-any",
+                "car:delete-any",
+                "user:create",
+                "permission:create",
+            ]
+        ]);
+
+        $authorUser = User::factory()->create([
+            'name' => 'Cota Dania',
+            'email' => 'cotadania@gmail.com',
+            "password" => "30ianpdi",
+            "permissions" => [
+                "car:create",
+                "car:update",
+                "car:delete",
+            ]
+        ]);
+
+        $editorUser = User::factory()->create([
+            'name' => 'Sorlea Alexandra',
+            'email' => 'alexandra_sorlea@gmail.com',
+            "password" => "30ianpdi",
+            "permissions" => [
+                "car:update-any",
+                "car:delete-any",
+            ]
+        ]);
+
+        $authorEditorUser = User::factory()->create([
+            'name' => 'Author/Editor',
+            'email' => 'ae@example.com',
+            "permissions" => [
+                "car:create",
+                "car:update-any",
+                "car:delete-any",
+            ]
         ]);
 
         $users = User::factory(20)->create();
-        $users->push($user);
+        $users->push($adminUser);
+        $users->push($authorUser);
+        $users->push($editorUser);
+        $users->push($authorEditorUser);
 
         $users->each(function ($user) {
             $cars = Car::factory(rand(1, 3))->create(['user_id' => $user->id]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
+use Inertia\Inertia;
 
 class PermissionController extends Controller
 {
@@ -13,7 +14,9 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render("Permissions/Index", [
+            "permissions" => Permission::all(),
+        ]);
     }
 
     /**
@@ -21,7 +24,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render("Permissions/Create");
     }
 
     /**
@@ -29,7 +32,9 @@ class PermissionController extends Controller
      */
     public function store(StorePermissionRequest $request)
     {
-        //
+        Permission::create($request->all());
+
+        return redirect()->route("permissions.index");
     }
 
     /**
@@ -45,7 +50,9 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        //
+        return Inertia::render("Permissions/Edit", [
+            "permissions" => $permission,
+        ]);
     }
 
     /**
@@ -53,7 +60,11 @@ class PermissionController extends Controller
      */
     public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        //
+        $permission->update([
+            "description" => $request->input("description"),
+        ]);
+
+        return redirect()->route("permissions.index");
     }
 
     /**
@@ -61,6 +72,8 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        $permission->delte();
+
+        return redirect()->route("permissions.index");
     }
 }

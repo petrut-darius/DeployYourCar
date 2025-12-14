@@ -5,10 +5,8 @@ defineProps({
     car: Object
 });
 
-const page = usePage()
-const user = page.props.auth.user
-    
-    
+const page = usePage()   
+
 </script>
 <template>
   <AppLayout>
@@ -16,7 +14,7 @@ const user = page.props.auth.user
       <div class="text-center text-5xl">
         {{ car.data.manufacture }} {{ car.data.model }}
       </div>
-      <div v-if="user.id == car.data.owner.id">
+      <div v-if="page.props.can?.update">
           <Link :href='route("cars.edit", car.data.id)' as="button" class="py-1 px-2 bg-pink-400 border rounded hover:text-white">Edit</Link>
           <Link :href='route("cars.destroy", car.data.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
       </div>
