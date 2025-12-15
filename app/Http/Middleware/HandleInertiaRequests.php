@@ -7,6 +7,7 @@ use Inertia\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use App\CarAbilities;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -41,15 +42,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 "can" => [
-                    "manageUsers" => Auth::check() && Gate::allows("manage-users")
+                    "manageUsers" => Auth::check() && Gate::allows("manage-users"),
+                    "createCar" => $request->user() ? $request->user()->can("create", \App\Models\Car::class) : false,
                 ],
             ],
         ];
-
-        logger([
-            'user' => Auth::user()?->id,
-            'has_permission' => Auth::user()?->hasPermission('user:create'),
-            'gate_allows' => Gate::allows('manage-users'),
-        ]);
     }
 }

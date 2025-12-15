@@ -14,9 +14,9 @@ const page = usePage()
       <div class="text-center text-5xl">
         {{ car.data.manufacture }} {{ car.data.model }}
       </div>
-      <div v-if="page.props.can?.update">
-          <Link :href='route("cars.edit", car.data.id)' as="button" class="py-1 px-2 bg-pink-400 border rounded hover:text-white">Edit</Link>
-          <Link :href='route("cars.destroy", car.data.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
+      <div v-if="page.props.auth.user">
+          <Link v-if="page.props.can?.update" :href='route("cars.edit", car.data.id)' as="button" class="py-1 px-2 bg-pink-400 border rounded hover:text-white">Edit</Link>
+          <Link v-if="page.props.can?.delete" :href='route("cars.destroy", car.data.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
       </div>
       <div>
         <p>Owner: <b>{{ car.data.owner.name }}</b></p>

@@ -33,7 +33,8 @@ class CarPolicy
     public function create(User $user): Response
     {
         //duce la modeulu car
-        return $user->hasPermission(CarPermissions::CRETE) ? Respnese::allow() : Response::denyAsNotFound();
+        //return $user->hasPermission(CarPermissions::CREATE) ? Response::allow() : Response::deny("debug");
+        return Response::allow();
     }
 
     /**
@@ -54,7 +55,7 @@ class CarPolicy
     public function delete(User $user, Car $car): Response
     {
         if($user->id !== $car->owner->id) {
-            return $user->hasPermissions(CarPermissions::DELETE_ANY) ? Response::allow() : Response::denyAsNotFound();
+            return $user->hasPermission(CarPermissions::DELETE_ANY) ? Response::allow() : Response::denyAsNotFound();
         }
 
         return $user->hasPermission(CarPermissions::DELETE) ? Response::allow() : Response::denyAsNotFound();

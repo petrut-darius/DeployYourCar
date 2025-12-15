@@ -9,6 +9,9 @@ defineProps({
 </script>
 <template>
     <AppLayout>
+        <div class="flex justify-center">
+            <h1 class="text-4xl">Users</h1>
+        </div>
         <div class="flex justify-center mt-6">
         <table class="min-w-full bg-gray-200 rounded-lg shadow">
             <thead class="bg-gray-500 text-white">

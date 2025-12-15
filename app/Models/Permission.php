@@ -10,6 +10,11 @@ class Permission extends Model
     /** @use HasFactory<\Database\Factories\PermissionFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        "name",
+        "description",
+    ];
+
     public function group() {
         return $this->belongsToMany(Group::class);
     }

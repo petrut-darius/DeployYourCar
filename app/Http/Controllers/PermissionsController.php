@@ -51,7 +51,7 @@ class PermissionsController extends Controller
     public function edit(Permission $permission)
     {
         return Inertia::render("Permissions/Edit", [
-            "permissions" => $permission,
+            "permission" => $permission,
         ]);
     }
 
@@ -72,7 +72,7 @@ class PermissionsController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        $permission->delte();
+        $permission->delete();
 
         return redirect()->route("permissions.index");
     }

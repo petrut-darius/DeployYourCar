@@ -111,67 +111,7 @@ onMounted(() => {
             />
 
             <!-- Dropdown -->
-            <div
-            v-if="showDropdown"
-            id="search-dropdown"
-            class="absolute top-full left-0 mt-1 p-3 bg-gray-700 rounded-lg shadow-md flex flex-col gap-3 w-full z-20"
-            >
-            <!-- Tags -->
-            <div class="flex flex-wrap gap-2">
-                <span class="font-semibold text-gray-200">Tags:</span>
-                <span
-                v-for="tag in tagsList"
-                :key="tag.id"
-                class="flex items-center bg-gray-600 text-gray-200 rounded-full px-2 py-1 text-xs hover:bg-blue-500 cursor-pointer transition-colors"
-                >
-                <input
-                    type="checkbox"
-                    :value="tag.id"
-                    v-model="selectedTags"
-                    class="mr-1 w-3 h-3 accent-blue-500"
-                />
-                {{ tag.name }}
-                </span>
-            </div>
-
-            <!-- Types -->
-            <div class="flex flex-wrap gap-2">
-                <span class="font-semibold text-gray-200">Types:</span>
-                <span
-                v-for="type in typesList"
-                :key="type.id"
-                class="flex items-center bg-gray-600 text-gray-200 rounded-full px-2 py-1 text-xs hover:bg-blue-500 cursor-pointer transition-colors"
-                >
-                <input
-                    type="checkbox"
-                    :value="type.id"
-                    v-model="selectedTypes"
-                    class="mr-1 w-3 h-3 accent-blue-500"
-                />
-                {{ type.name }}
-                </span>
-            </div>
-
-            <!-- Search Results -->
-            <div v-if="searchResults.length > 0" class="max-h-64 overflow-auto border border-gray-600 rounded mt-2">
-                <div
-                v-for="car in searchResults"
-                :key="car.id"
-                class="p-2 hover:bg-gray-600 cursor-pointer"
-                >
-                <Link :href="`/cars/${car.id}`" class="block text-white">
-                    {{ car.manufacture }} {{ car.model }}
-                </Link>
-                <small class="text-gray-400 block">
-                    Modifications: {{ car.modifications.map(m => m.name).join(', ') }}
-                </small>
-                </div>
-            </div>
-
-            <div v-else-if="searchResults.length === 0 && (searchQuery || selectedTags.length || selectedTypes.length)" class="p-2 text-gray-400">
-                No cars found
-            </div>
-            </div>
+          
         </div>
         </div>
 
@@ -179,7 +119,7 @@ onMounted(() => {
         <div v-if="user" class="flex items-center space-x-4">
 
             <!-- Create new (+) -->
-            <Link :href='route("cars.create")' class="relative py-1 px-2 bg-pink-400 border rounded hover:text-white">Add Car</Link>
+            <Link v-if="$page.props.auth?.can?.createCar" :href='route("cars.create")' class="relative py-1 px-2 bg-pink-400 border rounded hover:text-white">Add Car</Link>
 
             <form @click="logout">
                 <DangerButton class="relative py-1 px-2 border rounded">Log out!</DangerButton>
@@ -211,6 +151,8 @@ onMounted(() => {
 
     <!-- Conținutul paginii -->
     <main class="m-4 border rounded w-3/5 mx-auto p-4">
+
+
       <slot />
     </main>
 

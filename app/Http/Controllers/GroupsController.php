@@ -15,7 +15,7 @@ class GroupsController extends Controller
      */
     public function index()
     {
-        Inertia::render("Groups/Index", [
+        return Inertia::render("Groups/Index", [
             "groups" => Group::all(),
         ]);
     }
@@ -25,8 +25,8 @@ class GroupsController extends Controller
      */
     public function create()
     {
-        Inertia::render("Group/Create", [
-            "permisssions" => Permission::all(),
+        return Inertia::render("Groups/Create", [
+            "permissions" => Permission::all(),
         ]);
     }
 
@@ -57,6 +57,8 @@ class GroupsController extends Controller
      */
     public function edit(Group $group)
     {
+        $group->load("permissions");
+
         return Inertia::render("Groups/Edit", [
             "group" => $group,
             "permissions" => Permission::all(),

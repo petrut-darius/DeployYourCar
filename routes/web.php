@@ -20,10 +20,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get("/cars/search", [CarController::class, "search"])->name("cars.search");
-Route::get("/cars/filters", [CarController::class, "filters"])->name("cars.filters");
-Route::resource("/cars", CarController::class)->only(["index", "show"]);
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -33,6 +29,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/cars/create', [CarController::class, 'create'])->name('cars.create');
+    Route::post('/cars', [CarController::class, 'store'])->name('cars.store');
+    Route::get('/cars/{car}/edit', [CarController::class, 'edit'])->name('cars.edit');
+    Route::put('/cars/{car}', [CarController::class, 'update'])->name('cars.update');
+    Route::delete('/cars/{car}', [CarController::class, 'destroy'])->name('cars.destroy');
+
+    Route::get('/yourCars', [CarController::class, 'yourCars'])->name('cars.yourCars');
+    Route::delete('/cars/{car}/photo/{photo}', [CarController::class, 'destroyPhoto'])->name('cars.destroyPhoto');
+
+
     //maybe..
     Route::middleware("can:manage-users")->prefix("admin")->group(function() {
         Route::resource('users', UsersController::class)->except([ 'create', 'store']);
@@ -40,12 +46,11 @@ Route::middleware('auth')->group(function () {
         Route::resource("groups", GroupsController::class)->except(["show"]);
     });
 
-
-    //okey
-    Route::resource("/cars", CarController::class)->except(["index", "show"]);
-    Route::get("/yourCars", [CarController::class, "yourCars"])->name("cars.yourCars");
-    Route::delete("/cars/{car}/photo/{photo}", [CarController::class, "destroyPhoto"])->name("cars.destroyPhoto");
 });
+
+Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
+
 
 require __DIR__.'/auth.php';
 
