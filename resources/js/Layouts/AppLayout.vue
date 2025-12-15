@@ -96,6 +96,8 @@ onMounted(() => {
                 <NavLink v-if="user" :href='route("cars.yourCars")' :active="route().current('cars.yourCars')">Your Cars</NavLink>
                 <NavLink :href='route("cars.index")' :active="route().current('cars.explore')">Explore</NavLink>
                 <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('users.index')" :active="route().current('users.index')">Users</NavLink>
+                <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('permissions.index')" :active="route().current('permissions.index')">Permissions</NavLink>
+                <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('groups.index')" :active="route().current('groups.index')">Groups</NavLink>
             </div>
 
         <div class="relative w-64">

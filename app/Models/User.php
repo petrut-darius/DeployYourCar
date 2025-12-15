@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        "permissions",
     ];
 
     //ce valori sa ia live si ii zice si tipu de data gen array/string/boolean/int/etc.
@@ -70,6 +71,21 @@ class User extends Authenticatable
         return $groupPermissions->merge($permissions)->unique()->map(function($permission) {
             return strtolower($permission);
         }); 
+    }
+
+    public function getAllPermissionIds() {
+
+        //Context = sesiune
+        if(Auth::check() && Auth::user()->id === $this->id && Context::hasHidden("permissions")) {
+            return collect(Context::getHidden("permissions"))->values();
+        }
+
+        //ia permisiunile de la fiecare group al userului
+        $groupPermissionIds = $this->groups()->with("permissions:id")->get()->pluck("permissions")->flatten()->pluck("id");
+    
+        $permissionIds = collect($this->permissions)->map(fn($name) => Permission::where("name", $name)->value("id"))->filter()->values();
+
+        return $groupPermissionIds->merge($permissionIds)->unique()->values();
     }
 
     public function hasPermission($permission) {

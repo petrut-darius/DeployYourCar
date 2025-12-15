@@ -12,7 +12,7 @@ defineProps({
         <!-- page heading-->
 
         <div class="flex flex-col items-center">
-            <div v-for="car in cars.data" :key="car.id"class="p-4 rounded-lg shadow bg-gray-400 flex flex-col justify-center w-4/6 my-2 ">
+            <div v-for="car in cars.data" :key="car.id" class="p-4 rounded-lg shadow bg-gray-400 flex flex-col justify-center w-4/6 my-2 ">
                 <h2 class="text-xl font-semibold">
                     <a :href='route("cars.show", { car: car.id})'>{{ car.manufacture }} {{ car.model }}</a>
                 </h2>

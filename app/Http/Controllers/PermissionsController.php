@@ -7,7 +7,7 @@ use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
 use Inertia\Inertia;
 
-class PermissionController extends Controller
+class PermissionsController extends Controller
 {
     /**
      * Display a listing of the resource.

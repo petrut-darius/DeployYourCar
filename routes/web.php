@@ -8,6 +8,8 @@ use App\Models\Car;
 use App\Http\Resources\CarResource;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\GroupsController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -33,7 +35,7 @@ Route::middleware('auth')->group(function () {
 
     //maybe..
     Route::middleware("can:manage-users")->prefix("admin")->group(function() {
-        Route::resource('users', UsersController::class)->except(['show', 'create', 'store']);
+        Route::resource('users', UsersController::class)->except([ 'create', 'store']);
         Route::resource("permissions", PermissionsController::class)->except(["show"]);
         Route::resource("groups", GroupsController::class)->except(["show"]);
     });

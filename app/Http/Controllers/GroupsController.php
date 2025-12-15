@@ -8,7 +8,7 @@ use App\Models\Group;
 use Inertia\Inertia;
 use App\Models\Permission;
 
-class GroupController extends Controller
+class GroupsController extends Controller
 {
     /**
      * Display a listing of the resource.

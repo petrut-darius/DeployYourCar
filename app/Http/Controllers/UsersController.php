@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Permission;
+use App\Models\Group;
+
 
 class UsersController extends Controller
 {
@@ -50,9 +53,15 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         return Inertia::render("Users/Edit", [
-            "user" => $user,
-            "permissions" => Permission::all(),
-            "groups" => Group::all()
+            "user" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "permission_ids" => $user->getAllPermissionIds(),
+                "group_ids" => $user->groups->pluck("id"),
+            ],
+            "permissions" => Permission::select("id", "name")->get(),
+            "groups" => Group::select("id", "name")->get()
         ]);
     }
 
@@ -61,16 +70,16 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $permissions = Permission::whereIn("id", $request->permissions)->get();
+        $permissionNames = Permission::whereIn("id", $request->permissions ?? [])->pluck("name")->toArray();
 
         $user->update([
-            "name" => $request->input("name"),
-            "permissions" => $permissions->pluck("name"),
+            "name" => $request->name,
+            "permissions" => $permissionNames,
         ]);
 
-        $user->groups()->sync($request->input("group", []));
+        $user->groups()->sync($request->groups ?? []);
 
-        return redirect()->route("users.show");
+        return redirect()->route("users.show", $user);
     }
 
     /**

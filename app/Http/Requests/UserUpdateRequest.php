@@ -24,7 +24,9 @@ class UserUpdateRequest extends FormRequest
         return [
             "name" => "required|stirng|max:255",
             "permissions" => "nullable|array",
-            "permissions.*" => "integer|exists:permissions,id"
+            "permissions.*" => "integer|exists:permissions,id",
+            "groups" => "nullable|array",
+            "groups.*" => "integer|exists:groups,id"
         ];
     }
 }
