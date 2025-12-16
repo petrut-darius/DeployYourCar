@@ -12,6 +12,7 @@ use App\Models\Tag;
 use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use App\CarAbilities;
+use Illuminate\Support\Facades\Cache;
 
 class CarController extends Controller
 {
@@ -20,13 +21,17 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::orderBy("id", "desc")->with([
-            'owner',
-            'tags',
-            'types',
-            'modifications',
-            'story'
-        ])->paginate(10);
+        $page = request("page", 1);
+        
+        $cars = Cache::tags(["cars"])->remember("index:page:{$page}", 60, function() {
+            return Car::orderBy("id", "desc")->with([
+                'owner',
+                'tags',
+                'types',
+                'modifications',
+                'story'
+            ])->paginate(10);
+        });
 
         return Inertia::render("Cars/Index", [
             "cars" => CarResource::collection($cars),
@@ -34,14 +39,18 @@ class CarController extends Controller
     }
 
     public function yourCars() {
+        $page = request("page", 1);
+
         $user = Auth::user();
-        $cars = Car::orderBy("id", "desc")->where("user_id", $user->id)->with([
-            "owner",
-            "tags",
-            "types",
-            "modifications",
-            "story",
-        ])->paginate(10);
+        $cars = Cache::tags(["cars"])->remember("user:{$user->id}:page:{$page}", 60, function() use ($user){
+            return Car::where("user_id", $user->id)->with([
+                'owner',
+                'tags',
+                'types',
+                'modifications',
+                'story'
+            ])->paginate(10);
+        });
 
         return Inertia::render("Cars/yourCars", [
             "yourCars" => CarResource::collection($cars),
@@ -53,9 +62,17 @@ class CarController extends Controller
      */
     public function create()
     {
+        $tags = Cache::remember("tags:index", 60, function() {
+            return Tag::select("id", "name")->get();
+        });
+
+        $types = Cache::remember("types:index", 60, function() {
+            return Type::select("id", "name")->get();
+        });
+
         return Inertia::render("Cars/Create", [
-            "tags" => Tag::select("id", "name")->get(),
-            "types" => Type::select("id", "name")->get(),
+            "tags" => $tags,
+            "types" => $types,
         ]);
     }
 
@@ -106,6 +123,12 @@ class CarController extends Controller
             }
         }
 
+        Cache::tags(["cars"])->flush();
+        /*
+        Cache::forget("cars:show:{$car->id}");
+        Cache::forget("cars:edit:{$car->id}");
+        */
+
         return redirect()->route("cars.show", ["car" => $car]);
         //return redirect_to("cars.index");
     }
@@ -117,8 +140,9 @@ class CarController extends Controller
     {
         //dd(auth()->user()->can('create', \App\Models\Car::class)); 
 
-
-        $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
+        $car = Cache::tags(["cars"])->remember("show:{$car->id}", 60, function() use ($car){
+            return $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
+        });
 
         return Inertia::render("Cars/Show", [
             "car" => CarResource::make($car),
@@ -136,12 +160,22 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
-        $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
+        $tags = Cache::remember("tags:index", 60, function() {
+            return Tag::select("id", "name")->get();
+        });
+
+        $types = Cache::remember("types:index", 60, function() {
+            return Type::select("id", "name")->get();
+        });
+
+        $car = Cache::tags(["cars"])->remember("edit:{$car->id}", 60, function() use ($car) {
+            return $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
+        });
 
         return Inertia::render("Cars/Edit", [
             "car" => CarResource::make($car),
-            "tags" => Tag::select("id", "name")->get(),
-            "types" => Type::select("id", "name")->get(),
+            "tags" => $tags,
+            "types" => $types,
         ]);
     }
 
@@ -193,6 +227,8 @@ class CarController extends Controller
             }
         }
 
+        Cache::tags(["cars"])->flush();
+
         return redirect()->route("cars.show", ["car" => $car]);
     }
 
@@ -202,6 +238,10 @@ class CarController extends Controller
     public function destroy(Car $car)
     {
         $car->delete();
+
+        Cache::forget("cars:index");
+        Cache::forget("cars:show:{$car->id}");
+        Cache::forget("cars:edit:{$car->id}");
 
         return redirect()->route("cars.index");
     }
@@ -215,6 +255,8 @@ class CarController extends Controller
         }
 
         $media->delete();
+
+        Cache::tags(["cars"])->flush();
 
         return redirect("cars.update", ["car" => $car]);
     }

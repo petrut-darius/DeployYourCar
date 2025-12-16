@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Permission;
 use App\Models\Group;
-
+use Illuminate\Support\Facades\Cache;
 
 class UsersController extends Controller
 {
@@ -16,8 +16,13 @@ class UsersController extends Controller
      */
     public function index()
     {
+        $users = Cache::remember("users:index", 60, function () {
+            info("fetching users from db");
+            return User::all();
+        });
+
         return Inertia::render("Users/Index", [
-            "users" => User::all(),
+            "users" => $users,
         ]);
     }
 
@@ -42,6 +47,10 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
+        $user = Cache::remember("users:show:{$user->id}", 60, function() use ($user) {
+            return $user;
+        });
+
         return Inertia::render("Users/Show", [
             "user" => $user,
         ]);
@@ -52,17 +61,21 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        return Inertia::render("Users/Edit", [
-            "user" => [
-                "id" => $user->id,
-                "name" => $user->name,
-                "email" => $user->email,
-                "permission_ids" => $user->getAllPermissionIds(),
-                "group_ids" => $user->groups->pluck("id"),
-            ],
-            "permissions" => Permission::select("id", "name")->get(),
-            "groups" => Group::select("id", "name")->get()
-        ]);
+        $data = Cache::remember("users:edit:{$user->id}", 60, function() use ($user) {
+            return [
+                "user" => [
+                    "id" => $user->id,
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "permission_ids" => $user->getAllPermissionIds(),
+                    "group_ids" => $user->groups->pluck("id"),
+                ],
+                "permissions" => Permission::select("id", "name")->get(),
+                "groups" => Group::select("id", "name")->get()
+            ];
+        });
+
+        return Inertia::render("Users/Edit", $data);
     }
 
     /**
@@ -79,6 +92,10 @@ class UsersController extends Controller
 
         $user->groups()->sync($request->groups ?? []);
 
+        Cache::forget("users:index");
+        Cache::forget("users:show:{$user->id}");
+        Cache::forget("users:edit:{$user->id}");
+
         return redirect()->route("users.show", $user);
     }
 
@@ -92,6 +109,10 @@ class UsersController extends Controller
         }
 
         $user->delete();
+
+        Cache::forget("users:index");
+        Cache::forget("users:show:{$user->id}");
+        Cache::forget("users:edit:{$user->id}");
 
         return redirect()->route("users.index");
     }

@@ -6,6 +6,7 @@ use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class PermissionsController extends Controller
 {
@@ -14,8 +15,12 @@ class PermissionsController extends Controller
      */
     public function index()
     {
+        $permissions = Cache::tags(["permissions"])->remember("index", 60, function() {
+            return Permission::all();
+        });
+
         return Inertia::render("Permissions/Index", [
-            "permissions" => Permission::all(),
+            "permissions" => $permissions,
         ]);
     }
 
@@ -34,6 +39,9 @@ class PermissionsController extends Controller
     {
         Permission::create($request->all());
 
+        Cache::tags(["permissions"])->flush();
+        Cache::tags(["groups"])->flush();
+
         return redirect()->route("permissions.index");
     }
 
@@ -50,6 +58,10 @@ class PermissionsController extends Controller
      */
     public function edit(Permission $permission)
     {
+        $permission = Cache::tags(["permissions"])->remember("show:{$permission->id}", 60, function() use ($permission){
+            return Permission::findOrFail($permission->id);
+        });
+
         return Inertia::render("Permissions/Edit", [
             "permission" => $permission,
         ]);
@@ -64,6 +76,9 @@ class PermissionsController extends Controller
             "description" => $request->input("description"),
         ]);
 
+        Cache::tags(["permissions"])->flush();
+        Cache::tags(["groups"])->flush();
+
         return redirect()->route("permissions.index");
     }
 
@@ -73,6 +88,9 @@ class PermissionsController extends Controller
     public function destroy(Permission $permission)
     {
         $permission->delete();
+
+        Cache::tags(["permissions"])->flush();
+        Cache::tags(["groups"])->flush();
 
         return redirect()->route("permissions.index");
     }

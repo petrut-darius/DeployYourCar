@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateGroupRequest;
 use App\Models\Group;
 use Inertia\Inertia;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Cache;
 
 class GroupsController extends Controller
 {
@@ -15,8 +16,12 @@ class GroupsController extends Controller
      */
     public function index()
     {
+        $groups = Cache::tags(["groups"])->remember("index", 60, function() {
+            return Group::all();
+        });
+
         return Inertia::render("Groups/Index", [
-            "groups" => Group::all(),
+            "groups" => $groups,
         ]);
     }
 
@@ -25,8 +30,12 @@ class GroupsController extends Controller
      */
     public function create()
     {
+        $permissions = Cache::tags(["permissions"])->remember("index", 60, function() {
+            return Permission::all();
+        });
+
         return Inertia::render("Groups/Create", [
-            "permissions" => Permission::all(),
+            "permissions" => $permissions,
         ]);
     }
 
@@ -41,6 +50,8 @@ class GroupsController extends Controller
 
         $group->permissions()->sync($request->input("permissions"));
         
+        Cache::tags(["groups"])->flush();
+
         return redirect()->route("groups.index");
     }
 
@@ -57,11 +68,17 @@ class GroupsController extends Controller
      */
     public function edit(Group $group)
     {
-        $group->load("permissions");
+        $group = Cache::tags(["groups"])->remember("edit:{$group->id}", 60, function() use ($group) {
+            return $group->load("permissions");
+        });
+
+        $permissions = Cache::tags(["permissios"])->remember("index", 60, function() {
+            return Permission::all();
+        });
 
         return Inertia::render("Groups/Edit", [
             "group" => $group,
-            "permissions" => Permission::all(),
+            "permissions" => $permissions,
         ]);
     }
 
@@ -76,6 +93,8 @@ class GroupsController extends Controller
 
         $group->permissions()->sync($request->input("permissions", []));
 
+        Cache::tags(["groups"])->flush();
+
         return redirect()->route("groups.index");
     }
 
@@ -85,6 +104,8 @@ class GroupsController extends Controller
     public function destroy(Group $group)
     {
         $group->delete();
+
+        Cache::tags(["groups"])->flush();
 
         return redirect()->route("groups.index");
     }
