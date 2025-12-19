@@ -11,6 +11,10 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\GroupsController;
 
+//move to controller when testing finished
+use Spatie\LaravelPdf\Facades\Pdf;
+use Spatie\Browsershot\Browsershot;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -19,6 +23,21 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+
+Route::get("/pdftest", function() {
+    $html = "<h1>Test PDF</h1>";
+
+    //Pdf::html($html)->save('/some/directory/invoice.pdf');
+    return Pdf::html($html)->withBrowsershot(function (Browsershot $browsershot) {
+        $browsershot->setNodeBinary('/home/thepid/.nvm/versions/node/v22.21.1/bin/node')->setNpmBinary('/home/thepid/.nvm/versions/node/v22.21.1/bin/npm')->setOption("args", [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+        ]);
+    })->name("test.pdf")->download();
+
+});
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

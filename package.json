@@ -46,6 +46,7 @@
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
         "instantsearch.css": "^8.9.0",
+        "puppeteer": "^24.34.0",
         "tailwind-merge": "^3.2.0",
         "typescript": "^5.2.2",
         "typesense-instantsearch-adapter": "^2.9.0",

@@ -17,8 +17,10 @@
         "laravel/scout": "^10.22",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.11",
+        "predis/predis": "^3.3",
         "spatie/image": "^3.8",
         "spatie/laravel-medialibrary": "^11.17",
+        "spatie/laravel-pdf": "^1.8",
         "stevebauman/purify": "^6.3",
         "tightenco/ziggy": "^2.0",
         "typesense/typesense-php": "^5.2"
