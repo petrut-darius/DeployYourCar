@@ -10,6 +10,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\GroupsController;
+use App\Models\User;
 
 //move to controller when testing finished
 use Spatie\LaravelPdf\Facades\Pdf;
@@ -25,18 +26,22 @@ Route::get('/', function () {
 });
 
 
-Route::get("/pdftest", function() {
-    $html = "<h1>Test PDF</h1>";
+Route::get("/user_pdf/{user}", function(User $user) {
+    try{
+        $user->load("groups");
 
-    //Pdf::html($html)->save('/some/directory/invoice.pdf');
-    return Pdf::html($html)->withBrowsershot(function (Browsershot $browsershot) {
-        $browsershot->setNodeBinary('/home/thepid/.nvm/versions/node/v22.21.1/bin/node')->setNpmBinary('/home/thepid/.nvm/versions/node/v22.21.1/bin/npm')->setOption("args", [
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-        ]);
-    })->name("test.pdf")->download();
+        $permissions = \App\Models\Permission::whereIn("name", $user->permissions ?? [])->get();
 
-});
+        return Pdf::view("pdf.user", ["user" => $user, "permissions" => $permissions])->withBrowsershot(function (Browsershot $browsershot) {
+            $browsershot->setNodeBinary('/home/thepid/.nvm/versions/node/v22.21.1/bin/node')->setNpmBinary('/home/thepid/.nvm/versions/node/v22.21.1/bin/npm')->setOption("args", [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+            ]);
+        })->name("test.pdf")->download();
+    } catch (\Throwable $e) {
+        dd($e->getMessage(), $e->getTraceAsString()); // dump error
+    }
+})->name("users.pdf");
 
 
 Route::get('/dashboard', function () {

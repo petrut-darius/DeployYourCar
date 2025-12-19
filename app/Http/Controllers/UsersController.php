@@ -48,7 +48,7 @@ class UsersController extends Controller
     public function show(User $user)
     {
         $user = Cache::remember("users:show:{$user->id}", 60, function() use ($user) {
-            return $user;
+            return $user->load("groups");
         });
 
         return Inertia::render("Users/Show", [
