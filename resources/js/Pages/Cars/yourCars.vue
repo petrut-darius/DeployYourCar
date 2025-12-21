@@ -1,6 +1,8 @@
 <script setup>
 import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import {  Link } from '@inertiajs/vue3'
+
 
 defineProps({
     yourCars: Object
@@ -11,7 +13,7 @@ defineProps({
     <AppLayout>
         <!-- page heading-->
 
-        <div class="flex flex-col items-center">
+        <div v-if="yourCars.data.length > 0" class="flex flex-col items-center">
             <div v-for="car in yourCars.data" :key="car.id"class="p-4 rounded-lg shadow bg-gray-400 flex flex-col justify-center w-4/6 my-2 ">
                 <h2 class="text-xl font-semibold">
                     <a :href='route("cars.show", { car: car.id})'>{{ car.manufacture }} {{ car.model }}</a>
@@ -66,6 +68,10 @@ defineProps({
             <div class="flaot-end">
                 <Pagination class="mt-4" :links="yourCars.meta.links"/>
             </div>
+        </div>
+        <div v-else class="text-center">
+            <h2 class="text-xl font-semibold">You don't own any cars.</h2>
+            <Link v-if="$page.props.auth?.can?.createCar" :href='route("cars.create")' class="relative py-1 px-2 bg-pink-400 border rounded border-black hover:text-white">Add one!</Link>
         </div>
     </AppLayout>
 </template>

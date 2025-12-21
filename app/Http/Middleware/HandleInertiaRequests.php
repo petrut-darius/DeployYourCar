@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
                 "can" => [
                     "manageUsers" => Auth::check() && Gate::allows("manage-users"),
-                    "createCar" => $request->user() ? $request->user()->can("create", \App\Models\Car::class) : false,
+                    "createCar" => Auth::check() ? Auth::user()->can("create", \App\Models\Car::class) : false,
                 ],
             ],
         ];

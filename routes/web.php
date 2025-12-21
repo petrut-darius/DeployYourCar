@@ -11,8 +11,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\GroupsController;
 use App\Models\User;
-
-//move to controller when testing finished
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\Browsershot\Browsershot;
 
@@ -48,10 +48,26 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+    
+        return redirect('dashboard');
+    })->middleware(["auth", 'signed'])->name('verification.verify');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/email/verify', function () {
+        return Inertia::render('Auth/VerifyEmail');
+    })->name('verification.notice');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+    
+        return back()->with('message', 'Verification link sent!');
+    })->middleware('throttle:6,1')->name('verification.send');
 
     Route::get('/cars/create', [CarController::class, 'create'])->name('cars.create');
     Route::post('/cars', [CarController::class, 'store'])->name('cars.store');

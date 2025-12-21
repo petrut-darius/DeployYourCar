@@ -140,7 +140,7 @@ const deletePhoto = async (carId, photoId) => {
                     <div>
                         <InputLabel :for="'description-' + index" value="Description" />
                         <TextInput type="text" v-model="mod.description" class="mt-1 block w-full" :id="'description-' + index"/>
-                        <InputError :message="form.errors[`modifications.${index}.description`]" />
+                        <InputError :message="form.errors[`modification.${index}.description`]" />
                     </div>
 
                     <div>

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         Permission::insert([
             ["name" => "car:create", "description" => "Create car"],
             ["name" => "car:update", "description" => "Update car"],
-            ["name" => "car:update_any", "description" => "Update any car"],
+            ["name" => "car:update-any", "description" => "Update any car"],
             ["name" => "car:delete", "description" => "Delete car"],
             ["name" => "car:delete-any", "description" => "Delete any car"],
             ["name" => "user:create", "description" => "Create user"],

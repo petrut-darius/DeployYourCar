@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Context;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -59,18 +59,20 @@ class User extends Authenticatable
     public function getAllPermissions() {
 
         //Context = sesiune
-        if(Auth::user()->id === $this->id && Context::hasHidden("permissions")) {
-            return Context::getHidden("permissions");
+        if(Context::hasHidden("permissions")) {
+            return collect(Context::getHidden("permissions"));
         }
 
         //ia permisiunile de la fiecare group al userului
-        $groupPermissions = $this->groups()->with("permissions")->get()->pluck("permissions")->flatten()->pluck("name");
+        $groupPermissions = $this->groups()->with("permissions:name")->get()->pluck("permissions")->flatten()->pluck("name");
     
-        $permissions = collect($this->permissions);
+        $permissions = collect($this->permissions ?? []);
 
-        return $groupPermissions->merge($permissions)->unique()->map(function($permission) {
-            return strtolower($permission);
-        }); 
+        $allPermissions = $groupPermissions->merge($permissions)->unique()->map(fn ($permission) => strtolower($permission));
+
+        Context::addHidden("permissions", $allPermissions);
+
+        return $allPermissions;
     }
 
     public function getAllPermissionIds() {

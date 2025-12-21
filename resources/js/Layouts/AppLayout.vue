@@ -12,75 +12,6 @@ const user = page.props.auth.user;
 function logout() {
   router.post(route("logout"));
 }
-
-// Search
-const searchQuery = ref("");
-const searchResults = ref([]);
-const tagsList = ref([]);
-const typesList = ref([]);
-const selectedTags = ref([]);
-const selectedTypes = ref([]);
-const dropdownOpen = ref(false);
-
-// Fetch filters
-const fetchFilters = async () => {
-  try {
-    const response = await axios.get(route("cars.filters"));
-    tagsList.value = response.data.tags;
-    typesList.value = response.data.types;
-  } catch (error) {
-    console.error("Error fetching filters:", error);
-  }
-};
-
-onMounted(() => {
-  fetchFilters();
-});
-
-// Debounced search
-const fetchSearchResults = _.debounce(async () => {
-  if (
-    searchQuery.value.trim() === "" &&
-    selectedTags.value.length === 0 &&
-    selectedTypes.value.length === 0
-  ) {
-    searchResults.value = [];
-    return;
-  }
-
-  try {
-    const response = await axios.get(route("cars.search"), {
-      params: {
-        q: searchQuery.value,
-        tags: selectedTags.value,  // use IDs
-        types: selectedTypes.value // use IDs
-      },
-    });
-    searchResults.value = response.data;
-    dropdownOpen.value = true;
-  } catch (error) {
-    console.error("Search error:", error);
-    searchResults.value = [];
-    dropdownOpen.value = false;
-  }
-}, 300);
-
-watch([searchQuery, selectedTags, selectedTypes], fetchSearchResults);
-
-// Computed to show dropdown
-const showDropdown = computed(() => {
-  return dropdownOpen.value && (searchResults.value.length > 0 || selectedTags.value.length > 0 || selectedTypes.value.length > 0);
-});
-
-// Close dropdown when clicking outside
-const onClickOutside = (event) => {
-  if (!event.target.closest("#search-dropdown")) {
-    dropdownOpen.value = false;
-  }
-};
-onMounted(() => {
-  document.addEventListener("click", onClickOutside);
-});
 </script>
 
 <template>
@@ -94,7 +25,6 @@ onMounted(() => {
             <div class="hidden md:flex items-center space-x-4">
                 <NavLink :href='route("cars.index")' :active="route().current('cars.index')">Cars</NavLink>
                 <NavLink v-if="user" :href='route("cars.yourCars")' :active="route().current('cars.yourCars')">Your Cars</NavLink>
-                <NavLink :href='route("cars.index")' :active="route().current('cars.explore')">Explore</NavLink>
                 <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('users.index')" :active="route().current('users.index')">Users</NavLink>
                 <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('permissions.index')" :active="route().current('permissions.index')">Permissions</NavLink>
                 <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('groups.index')" :active="route().current('groups.index')">Groups</NavLink>
@@ -151,7 +81,6 @@ onMounted(() => {
 
     <!-- Conținutul paginii -->
     <main class="m-4 border rounded w-3/5 mx-auto p-4">
-
 
       <slot />
     </main>

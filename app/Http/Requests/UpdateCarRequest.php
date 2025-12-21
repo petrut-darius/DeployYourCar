@@ -41,9 +41,24 @@ class UpdateCarRequest extends FormRequest
             "types.*" => "integer|exists:types,id",
 
             "story" => "sometimes|string",
-
             "photos" => "nullable|array",
             "photos.*" => "image|mimes:png,jpg,jpeg|max:51"
+        ];
+    }
+
+    public function messages():array {
+        return [
+            "modifications.*.name.string" => "The name of the modification can't be null",
+            "modifications.*.description.string" => "The description of the modification can't be null",
+            "modifications.*.reason.string" => "The reason of the modification can't be null"
+        ];
+    }
+
+    public function attributes():array {
+        return [
+            "modifications.*.name" => "modification name",
+            "modifications.*.description" => "modification description",
+            "modifications.*.reson" => "modification reason",
         ];
     }
 }

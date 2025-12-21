@@ -46,7 +46,7 @@ const getUserPdf = async (id) => {
 
         <div v-if="$page.props.auth?.can?.manageUsers">
             <Link :href='route("users.edit", user.id)' as="button" class="py-1 px-2 bg-pink-400 border rounded hover:text-white">Edit</Link>
-            <Link :href='route("users.destroy", user.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
+            <Link v-if="$page.props.auth.user?.id !== user.id" :href='route("users.destroy", user.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
         </div>
 
         <div v-if="user.permissions && user.permissions.length" class="w-full max-w-3xl p-6 rounded-xl shadow mt-6 bg-gray-600">
