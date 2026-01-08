@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('SCOUT_DRIVER', 'collection'),
+    'driver' => env('SCOUT_DRIVER', 'meilisearch'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'queue' => env('SCOUT_QUEUE', false),
+    'queue' => env('SCOUT_QUEUE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -140,9 +140,14 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY'),
         'index-settings' => [
-            // 'users' => [
-            //     'filterableAttributes'=> ['id', 'name', 'email'],
-            // ],
+            "cars_index" => [
+                "filterableAttributes" => [
+                    "tags_ids",
+                    "types_ids",
+                    "manufacture",
+                    "model",
+                ]
+            ]
         ],
     ],
 
@@ -202,8 +207,9 @@ return [
             //     'search-parameters' => [
             //         'query_by' => 'name'
             //     ],
-            // ],z
+            // ],
         ],
+        'import_action' => env('TYPESENSE_IMPORT_ACTION', 'upsert'),
     ],
 
 ];

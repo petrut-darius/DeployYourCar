@@ -11,7 +11,6 @@ use App\Models\Type;
 use App\Models\Tag;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Laravel\Scout\Searchable;
 
@@ -30,12 +29,14 @@ class Car extends Model implements HasMedia
     ];
 
     public function toSearchableArray(): array {
+        $this->loadMissing(['types:id', 'tags:id']);
+
         return [
-            "manufacture" => $this->manufacture,
-            "model" => $this->model,
-            "modifications" => $this->modifications->pluck( "name")->toArray(),
-            "tags" => $this->tags->pluck( "name")->toArray(),
-            "types" => $this->types->pluck( "name")->toArray(),
+            'id' => $this->id,
+            'manufacture' => $this->manufacture,
+            'model' => $this->model,
+            'types_ids' => $this->types->pluck('id')->all(),
+            'tags_ids' => $this->tags->pluck('id')->all(),
         ];
     }
 

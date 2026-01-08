@@ -50,7 +50,7 @@ Route::get('/dashboard', function () {
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
-    
+
         return redirect('dashboard');
     })->middleware(["auth", 'signed'])->name('verification.verify');
 
@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
-    
+
         return back()->with('message', 'Verification link sent!');
     })->middleware('throttle:6,1')->name('verification.send');
 
@@ -90,7 +90,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
 Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
-
 
 require __DIR__.'/auth.php';
 

@@ -29,20 +29,6 @@ function logout() {
                 <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('permissions.index')" :active="route().current('permissions.index')">Permissions</NavLink>
                 <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('groups.index')" :active="route().current('groups.index')">Groups</NavLink>
             </div>
-
-        <div class="relative w-64">
-            <!-- Search input -->
-            <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search cars..."
-            class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            @focus="dropdownOpen = true"
-            />
-
-            <!-- Dropdown -->
-          
-        </div>
         </div>
 
         <!-- Right Section -->
@@ -56,11 +42,6 @@ function logout() {
             </form>
 
             <!-- Avatar -->
-            <img
-            class="w-8 h-8 rounded-full border border-gray-700"
-            src="https://avatars.githubusercontent.com/u/1?v=4"
-            alt="User Avatar"
-            />
 
             <!-- Mobile Menu -->
             <button class="md:hidden hover:text-white">

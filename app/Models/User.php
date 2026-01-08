@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Context;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable //implements MustVerifyEmail -> trebuie sa faci sandbox pt asta, acuma il foloseam la alt proiect
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -65,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         //ia permisiunile de la fiecare group al userului
         $groupPermissions = $this->groups()->with("permissions:name")->get()->pluck("permissions")->flatten()->pluck("name");
-    
+
         $permissions = collect($this->permissions ?? []);
 
         $allPermissions = $groupPermissions->merge($permissions)->unique()->map(fn ($permission) => strtolower($permission));
@@ -84,7 +84,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         //ia permisiunile de la fiecare group al userului
         $groupPermissionIds = $this->groups()->with("permissions:id")->get()->pluck("permissions")->flatten()->pluck("id");
-    
+
         $permissionIds = collect($this->permissions)->map(fn($name) => Permission::where("name", $name)->value("id"))->filter()->values();
 
         return $groupPermissionIds->merge($permissionIds)->unique()->values();

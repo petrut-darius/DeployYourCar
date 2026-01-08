@@ -13,30 +13,63 @@ use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use App\CarAbilities;
 use Illuminate\Support\Facades\Cache;
+use Meilisearch\Scout\SearchableMeilisearchEngine;
 
 class CarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $page = request("page", 1);
-        
-        $cars = Cache::tags(["cars"])->remember("index:page:{$page}", 60, function() {
-            return Car::orderBy("id", "desc")->with([
-                'owner',
-                'tags',
-                'types',
-                'modifications',
-                'story'
-            ])->paginate(10);
-        });
 
-        return Inertia::render("Cars/Index", [
-            "cars" => CarResource::collection($cars),
+    public function index(Request $request)
+    {
+        $query = $request->string('q')->toString();
+        $tags = array_map('intval', $request->input('tags', []));
+        $types = array_map('intval', $request->input('types', []));
+
+        if ($query || !empty($tags) || !empty($types)) {
+            $cars = Car::search($query)
+                ->tap(function ($meiliBuilder) use ($tags, $types) {
+                    $filters = [];
+
+                    if (!empty($tags)) {
+                        $filters[] = 'tags_ids IN [' . implode(',', $tags) . ']';
+                    }
+
+                    if (!empty($types)) {
+                        $filters[] = 'types_ids IN [' . implode(',', $types) . ']';
+                    }
+
+                    if (!empty($filters)) {
+                        // Use raw Meilisearch filters
+                        $meiliBuilder->raw(['filter' => implode(' AND ', $filters)]);
+                    }
+                })
+                ->paginate(10);
+        } else {
+            $page = request('page', 1);
+
+            $cars = Cache::tags(['cars'])->remember("index:page:{$page}", 60, function () {
+                return Car::orderBy('id', 'desc')->with([
+                    'owner',
+                    'tags',
+                    'types',
+                    'modifications',
+                    'story'
+                ])->paginate(10);
+            });
+        }
+
+        return Inertia::render('Cars/Index', [
+            'cars' => CarResource::collection($cars),
+            'types' => Type::select('id', 'name')->get(),
+            'tags' => Tag::select('id', 'name')->get(),
+            'filters' => $request->only(['q', 'types', 'tags']),
         ]);
     }
+
+
+
 
     public function yourCars() {
         $page = request("page", 1);
@@ -138,7 +171,7 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        //dd(auth()->user()->can('create', \App\Models\Car::class)); 
+        //dd(auth()->user()->can('create', \App\Models\Car::class));
 
         $car = Cache::tags(["cars"])->remember("show:{$car->id}", 60, function() use ($car){
             return $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
@@ -249,7 +282,7 @@ class CarController extends Controller
     public function destroyPhoto(Car $car, $photo_id) {
         //dd($car->id, $photo_id);
         $media = $car->media()->where("id", $photo_id)->where("collection_name", "photos")->first();
-    
+
         if(!$media) {
             abort(404, "Photo not found");
         }
@@ -258,6 +291,6 @@ class CarController extends Controller
 
         Cache::tags(["cars"])->flush();
 
-        return redirect("cars.update", ["car" => $car]);
+        return redirect("cars.edit", ["car" => $car]);
     }
 }

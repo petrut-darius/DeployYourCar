@@ -42,27 +42,6 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
-        $authorUser = User::factory()->create([
-            'name' => 'Cota Dania',
-            'email' => 'cotadania@gmail.com',
-            "password" => "30ianpdi",
-            "permissions" => [
-                "car:create",
-                "car:update",
-                "car:delete",
-            ]
-        ]);
-
-        $editorUser = User::factory()->create([
-            'name' => 'Sorlea Alexandra',
-            'email' => 'alexandra_sorlea@gmail.com',
-            "password" => "30ianpdi",
-            "permissions" => [
-                "car:update-any",
-                "car:delete-any",
-            ]
-        ]);
-
         $authorEditorUser = User::factory()->create([
             'name' => 'Author/Editor',
             'email' => 'ae@example.com',
@@ -75,13 +54,11 @@ class DatabaseSeeder extends Seeder
 
         $users = User::factory(20)->create();
         $users->push($adminUser);
-        $users->push($authorUser);
-        $users->push($editorUser);
         $users->push($authorEditorUser);
 
         $users->each(function ($user) {
             $cars = Car::factory(rand(1, 3))->create(['user_id' => $user->id]);
-        
+
             $cars->each(function ($car) {
                 Modification::factory()->create([
                     "car_id" => $car->id,
@@ -99,12 +76,58 @@ class DatabaseSeeder extends Seeder
             $story->save();
         });
 
+        //tags
         Tag::create([
-            "name" => "test_tag",
+            "name" => "JDM",
+        ]);
+
+        Tag::create([
+            "name" => "USDM",
+        ]);
+
+        Tag::create([
+            "name" => "EDM",
+        ]);
+
+        Tag::create([
+            "name" => "KDM",
+        ]);
+
+        Tag::create([
+            "name" => "Euro",
+        ]);
+
+        Tag::create([
+            "name" => "Aussie",
+        ]);
+
+        //types
+        Type::create([
+            "name" => "Drift",
         ]);
 
         Type::create([
-            "name" => "test_type",
+            "name" => "Time Attack",
+        ]);
+
+        Type::create([
+            "name" => "Rally",
+        ]);
+
+        Type::create([
+            "name" => "Drag",
+        ]);
+
+        Type::create([
+            "name" => "Auotcross",
+        ]);
+
+        Type::create([
+            "name" => "Show Car",
+        ]);
+
+        Type::create([
+            "name" => "Daily Driver",
         ]);
     }
 }
