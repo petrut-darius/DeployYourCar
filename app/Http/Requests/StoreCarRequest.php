@@ -30,9 +30,9 @@ class StoreCarRequest extends FormRequest
             "color" => "required|string|max:50",
 
             "modifications" => "nullable|array",
-            "modifications.*.name" => "required|string|max:255",
+            "modifications.*.name" => "nullable|string|max:255",
             "modifications.*.description" => "nullable|string|max:255",
-            "modifications.*.reason" => "required|string|max:255",
+            "modifications.*.reason" => "nullable|string|max:255",
 
             "tags" => "nullable|array",
             "tags.*" => "integer|exists:tags,id",

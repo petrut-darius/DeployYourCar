@@ -25,7 +25,7 @@ const form = useForm({
     story: "Write your cars story, how did you got it?",
     photos: [],
     modifications: [
-        { name: "", description: "", reason: "" }
+        { name: "" ?? null, description: "" ?? null, reason: "" ?? null}
     ]
 });
 
@@ -38,9 +38,9 @@ const submit = () => {
 
 const addModification = () => {
     form.modifications.push({
-        name: "",
-        description: "",
-        reason: ""
+        name: "" ?? null,
+        description: "" ?? null,
+        reason: "" ?? null
     });
 };
 
@@ -50,7 +50,7 @@ const addModification = () => {
         <form @submit.prevent="submit" class=" mx-auto">
             <div class="mt-4">
                 <InputLabel for="manufacture" value="Manufacture" />
-                
+
                 <TextInput v-model="form.manufacture" id="manufacture" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.manufacture" class="mt-2"></InputError>
@@ -58,7 +58,7 @@ const addModification = () => {
 
             <div>
                 <InputLabel for="model" value="Model" />
-                
+
                 <TextInput v-model="form.model" id="model" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.model" class="mt-2"></InputError>
@@ -66,7 +66,7 @@ const addModification = () => {
 
             <div>
                 <InputLabel for="displacement" value="Displacement (L)" />
-                
+
                 <TextInput v-model="form.displacement" id="displacement" type="number" class="mt-1 block w-full" step="0.1" min="0.1"/>
 
                 <InputError :message="form.errors.displacement" class="mt-2"></InputError>
@@ -74,7 +74,7 @@ const addModification = () => {
 
             <div class="mt-4">
                 <InputLabel for="engineCode" value="Engine Code" />
-                
+
                 <TextInput v-model="form.engineCode" id="engineCode" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.engineCode" class="mt-2"></InputError>
@@ -82,7 +82,7 @@ const addModification = () => {
 
             <div class="mt-4">
                 <InputLabel for="whp" value="Wheel Horsepower (WHP)" />
-                
+
                 <TextInput v-model="form.whp" id="whp" type="number" class="mt-1 block w-full" min="1"/>
 
                 <InputError :message="form.errors.whp" class="mt-2"></InputError>
@@ -90,7 +90,7 @@ const addModification = () => {
 
             <div class="mt-4">
                 <InputLabel for="color" value="Color" />
-                
+
                 <TextInput v-model="form.color" id="color" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.color" class="mt-2"></InputError>
@@ -131,7 +131,7 @@ const addModification = () => {
 
             <div class="mt-4">
                 <InputLabel for="tags" value="Tags" />
-                
+
                 <select v-model="form.tags" id="tags" multiple class="mt-1 block w-full max-h-40 overflow-y-auto border rounded">
                     <option v-for="tag in tags" :key="tag.id" :value="tag.id" class="text-center rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:text-black dark:focus:border-blue-600 dark:focus:ring-blue-600 p-1">
                         {{ tag.name }}
@@ -140,10 +140,10 @@ const addModification = () => {
 
                 <InputError :message="form.errors.tags" class="mt-2"></InputError>
             </div>
-            
+
             <div>
                 <InputLabel for="types" value="Types" />
-                
+
                 <select v-model="form.types" id="types" multiple class="mt-1 block w-full max-h-40 overflow-y-auto border rounded">
                     <option v-for="type in types" :key="type.id" :value="type.id" class="text-center rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:text-black dark:focus:border-blue-600 dark:focus:ring-blue-600 p-1">
                         {{ type.name }}
@@ -155,7 +155,7 @@ const addModification = () => {
 
             <div class="mt-4">
                 <InputLabel for="story" value="Story" />
-                
+
                 <Tiptap v-model="form.story" />
 
                 <InputError :message="form.errors.story" class="mt-2"/>
@@ -171,7 +171,7 @@ const addModification = () => {
                     class="block mt-1"
                     rules="mimes:jpg"
                 />
-        
+
                 <InputError :message="form.errors.photos" class="mt-2"/>
             </div>
 

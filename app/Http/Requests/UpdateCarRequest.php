@@ -42,7 +42,7 @@ class UpdateCarRequest extends FormRequest
 
             "story" => "sometimes|string",
             "photos" => "nullable|array",
-            "photos.*" => "image|mimes:png,jpg,jpeg|max:51"
+            "photos.*" => "image|mimes:png,jpg,jpeg|max:5120"
         ];
     }
 

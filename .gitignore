@@ -25,3 +25,4 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+echo "meili_data/" >> .gitignore

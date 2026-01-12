@@ -26,15 +26,15 @@ const form = useForm({
     story: car.data.story?.bodyHtml ?? "plm",
     photos: [],
     modifications: car.data.modifications ?? [
-        { name: "", description: "", reason: "" }
+        { name: null, description: null, reason: null }
     ]
 });
 
 const addModification = () => {
     form.modifications.push({
-        name: "",
-        description: "",
-        reason: ""
+        name: null,
+        description: null,
+        reason: null
     });
 };
 
@@ -68,7 +68,7 @@ const deletePhoto = async (carId, photoId) => {
         forceFormData: true,
     })
 };
-    
+
 //ref -> o variabila care ia valoarea atunca nu dupa submit, updatata live
 //computed -> o variabila calculata din alte variabile, care odata ce vede ca o variabila s-o schimbat e updata si ea
 </script>
@@ -77,7 +77,7 @@ const deletePhoto = async (carId, photoId) => {
         <form @submit.prevent="submit" class=" mx-auto">
             <div class="mt-4">
                 <InputLabel for="manufacture" value="Manufacture" />
-                
+
                 <TextInput v-model="form.manufacture" id="manufacture" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.manufacture" class="mt-2"></InputError>
@@ -85,7 +85,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div>
                 <InputLabel for="model" value="Model" />
-                
+
                 <TextInput v-model="form.model" id="model" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.model" class="mt-2"></InputError>
@@ -93,7 +93,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div>
                 <InputLabel for="displacement" value="Displacement (L)" />
-                
+
                 <TextInput v-model="form.displacement" id="displacement" type="number" class="mt-1 block w-full" step="0.1" min="0.1"/>
 
                 <InputError :message="form.errors.displacement" class="mt-2"></InputError>
@@ -101,7 +101,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div class="mt-4">
                 <InputLabel for="engineCode" value="Engine Code" />
-                
+
                 <TextInput v-model="form.engineCode" id="engineCode" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.engineCode" class="mt-2"></InputError>
@@ -109,7 +109,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div class="mt-4">
                 <InputLabel for="whp" value="Wheel Horsepower (WHP)" />
-                
+
                 <TextInput v-model="form.whp" id="whp" type="number" class="mt-1 block w-full" min="1"/>
 
                 <InputError :message="form.errors.whp" class="mt-2"></InputError>
@@ -117,7 +117,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div class="mt-4">
                 <InputLabel for="color" value="Color" />
-                
+
                 <TextInput v-model="form.color" id="color" type="text" class="mt-1 block w-full" />
 
                 <InputError :message="form.errors.color" class="mt-2"></InputError>
@@ -130,7 +130,7 @@ const deletePhoto = async (carId, photoId) => {
                     <h3 class="text-lg font-semibold text-gray-700">
                         Modification {{ index + 1 }}
                     </h3>
-                        //number-to-words aicia la erori
+
                     <div>
                         <InputLabel :for="'name-' + index" value="Modification Name" />
                         <TextInput type="text" v-model="mod.name" class="mt-1 block w-full" :id="'name-' + index"/>
@@ -140,7 +140,7 @@ const deletePhoto = async (carId, photoId) => {
                     <div>
                         <InputLabel :for="'description-' + index" value="Description" />
                         <TextInput type="text" v-model="mod.description" class="mt-1 block w-full" :id="'description-' + index"/>
-                        <InputError :message="form.errors[`modification.${index}.description`]" />
+                        <InputError :message="form.errors[`modifications.${index}.description`]" />
                     </div>
 
                     <div>
@@ -152,7 +152,7 @@ const deletePhoto = async (carId, photoId) => {
                     <div>
                         <button type="button" @click="deleteModification(index)">Delete this modification</button>
                     </div>
-                    
+
                 </div>
 
                 <button type="button" @click="addModification" class="btn btn-primary ml-2 text-purple-400">
@@ -162,7 +162,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div class="mt-4">
                 <InputLabel for="tags" value="Tags" />
-                
+
                 <select v-model="form.tags" id="tags" multiple class="mt-1 block w-full max-h-40 overflow-y-auto border rounded">
                     <option v-for="tag in tags" :key="tag.id" :value="tag.id" class="text-center rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:text-black dark:focus:border-blue-600 dark:focus:ring-blue-600 p-1">
                         {{ tag.name }}
@@ -171,10 +171,10 @@ const deletePhoto = async (carId, photoId) => {
 
                 <InputError :message="form.errors.tags" class="mt-2"></InputError>
             </div>
-            
+
             <div>
                 <InputLabel for="types" value="Types" />
-                
+
                 <select v-model="form.types" id="types" multiple class="mt-1 block w-full max-h-40 overflow-y-auto border rounded">
                     <option v-for="type in types" :key="type.id" :value="type.id" class="text-center rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:text-black dark:focus:border-blue-600 dark:focus:ring-blue-600 p-1">
                         {{ type.name }}
@@ -186,7 +186,7 @@ const deletePhoto = async (carId, photoId) => {
 
             <div class="mt-4">
                 <InputLabel for="story" value="Story" />
-                
+
                 <Tiptap v-model="form.story" />
 
                 <InputError :message="form.errors.story" class="mt-2"/>
@@ -197,12 +197,13 @@ const deletePhoto = async (carId, photoId) => {
 
                 <input
                     type="file"
+                    name="photos[]"
                     multiple
                     @change="e => form.photos = Array.from(e.target.files)"
                     class="block mt-1"
                     rules="mimes:jpg"
                 />
-        
+
                 <InputError :message="form.errors.photos" class="mt-2"/>
             </div>
 

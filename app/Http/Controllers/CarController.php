@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use App\CarAbilities;
 use Illuminate\Support\Facades\Cache;
 use Meilisearch\Scout\SearchableMeilisearchEngine;
+use App\Actions\CreateCar;
+use App\Actions\UpdateCar;
 
 class CarController extends Controller
 {
@@ -41,8 +43,7 @@ class CarController extends Controller
                     }
 
                     if (!empty($filters)) {
-                        // Use raw Meilisearch filters
-                        $meiliBuilder->raw(['filter' => implode(' AND ', $filters)]);
+                        $meiliBuilder->raw();
                     }
                 })
                 ->paginate(10);
@@ -112,58 +113,14 @@ class CarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCarRequest $request)
+    public function store(StoreCarRequest $request, CreateCar $createCar)
     {
         //dd($request);
-        $car = Car::create([
-            "user_id" => Auth::id(),
-            "manufacture" => $request->manufacture,
-            "model" => $request->model,
-            "displacement" => $request->displacement,
-            "engine_code" => $request->engineCode,
-            "whp" => $request->whp,
-            "color" => $request->color,
-        ]);
-
-        $car->story()->create([
-            "user_id" => $car->user_id,
-            "body_html" => $request->story,
-        ]);
-
-        if($request->filled("modifications")) {
-            foreach($request->input("modifications") as $mod) {
-                $car->modifications()->create([
-                    "user_id" => $car->user_id,
-                    "name" => $mod["name"],
-                    "description" => $mod["description"] ?? null,
-                    "reason" => $mod["reason"],
-                ]);
-            }
-        }
-
-        $car->tags()->sync($request->input("tags", []));
-        $car->types()->sync($request->input("types", []));
-
-        $photos = $request->file('photos');
-
-        if ($photos && !is_array($photos)) {
-            $photos = [$photos];
-        }
-
-        if ($photos) {
-            foreach ($photos as $photo) {
-                $car->addMedia($photo)->toMediaCollection('photos', "public");
-            }
-        }
+        $car = $createCar->execute($request->validated(), $request->user()->id);
 
         Cache::tags(["cars"])->flush();
-        /*
-        Cache::forget("cars:show:{$car->id}");
-        Cache::forget("cars:edit:{$car->id}");
-        */
 
         return redirect()->route("cars.show", ["car" => $car]);
-        //return redirect_to("cars.index");
     }
 
     /**
@@ -215,50 +172,11 @@ class CarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCarRequest $request, Car $car)
+    public function update(UpdateCarRequest $request, UpdateCar $updateCar)
     {
-        //dd($request, $car);
+        //dd($request);
 
-        $car->update([
-            "manufacture" => $request->manufacture,
-            "model" => $request->model,
-            "displacement" => $request->displacement,
-            "engine_code" => $request->engineCode,
-            "whp" => $request->whp,
-            "color" => $request->color,
-        ]);
-
-        $car->story()->update([
-            "body_html" => $request->story,
-        ]);
-
-        if($request->filled("modifications")) {
-            $car->modifications()->delete();
-
-            foreach($request->input("modifications") as $mod) {
-                $car->modifications()->create([
-                    "user_id" => $car->user_id,
-                    "name" => $mod["name"],
-                    "description" => $mod["description"] ?? null,
-                    "reason" => $mod["reason"],
-                ]);
-            }
-        }
-
-        $car->tags()->sync($request->input("tags", []));
-        $car->types()->sync($request->input("types", []));
-
-        $photos = $request->file('photos');
-
-        if ($photos && !is_array($photos)) {
-            $photos = [$photos];
-        }
-
-        if ($photos) {
-            foreach ($photos as $photo) {
-                $car->addMedia($photo)->toMediaCollection('photos', "public");
-            }
-        }
+        $car = $updateCar->execute($request->validated(), $request->car);
 
         Cache::tags(["cars"])->flush();
 
@@ -291,6 +209,6 @@ class CarController extends Controller
 
         Cache::tags(["cars"])->flush();
 
-        return redirect("cars.edit", ["car" => $car]);
+        return redirect("cars.index");
     }
 }

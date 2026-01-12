@@ -12,7 +12,7 @@ const page = usePage();
 const types = page.props.types ?? []
 const tags = page.props.tags ?? []
 
-const q = ref(page.props.filters?.q ?? '')
+const q = ref(page.props.filters?.q ?? "")
 const selectedTypes = ref(page.props.filters?.types ?? [])
 const selectedTags = ref(page.props.filters?.tags ?? [])
 
@@ -41,41 +41,41 @@ watch([q, selectedTypes, selectedTags], search)
     <AppLayout>
         <!-- page heading-->
 
-        <div class="relative w-72">
-        <div class=" rounded-lg p-3 shadow-lg space-y-3 gap-4">
+        <div class="relative mx-auto">
+            <div class=" rounded-lg p-3 shadow-lg space-y-3 gap-4 flex">
 
-            <input
-            v-model="q"
-            type="text"
-            placeholder="Search car name…"
-            class="w-full rounded-md   text-sm px-3 py-2
-                    placeholder-gray-400 focus:ring-2  focus:outline-none"
-            />
+                <input
+                v-model="q"
+                type="text"
+                placeholder="Search car name…"
+                class="w-full rounded-md   text-sm px-3 py-2
+                        placeholder-gray-400 focus:ring-2  focus:outline-none"
+                />
 
-            <div>
-            <p class="text-xs uppercase tracking-wide mb-1">Types</p>
-            <div class="flex flex-wrap gap-2">
-                <label v-for="type in types" :key="type.id"
-                    class="flex items-center gap-1 px-2 py-1 rounded-md text-xs cursor-pointer hover:bg-gray-600">
-                <input type="checkbox" class="accent-pink-400" :value="type.id" v-model="selectedTypes" />
-                {{ type.name }}
-                </label>
+                <div>
+                <p class="text-xs uppercase tracking-wide mb-1">Types</p>
+                <div class="flex flex-wrap gap-2">
+                    <label v-for="type in types" :key="type.id"
+                        class="flex items-center gap-1 px-2 py-1 rounded-md text-xs cursor-pointer hover:bg-gray-600">
+                    <input type="checkbox" class="accent-pink-400" :value="type.id" v-model="selectedTypes" />
+                    {{ type.name }}
+                    </label>
+                </div>
+                </div>
+
+                <div>
+                <p class="text-xs uppercase tracking-wide mb-1">Tags</p>
+                <div class="flex flex-wrap gap-2">
+                    <label v-for="tag in tags" :key="tag.id"
+                        class="flex items-center gap-1 px-2 py-1 rounded-md text-xs cursor-pointer hover:bg-gray-600">
+                    <input type="checkbox" class="accent-pink-400" :value="tag.id" v-model="selectedTags" />
+                    {{ tag.name }}
+                    </label>
+                </div>
+                </div>
+
+
             </div>
-            </div>
-
-            <div>
-            <p class="text-xs uppercase tracking-wide mb-1">Tags</p>
-            <div class="flex flex-wrap gap-2">
-                <label v-for="tag in tags" :key="tag.id"
-                    class="flex items-center gap-1 px-2 py-1 rounded-md text-xs cursor-pointer hover:bg-gray-600">
-                <input type="checkbox" class="accent-pink-400" :value="tag.id" v-model="selectedTags" />
-                {{ tag.name }}
-                </label>
-            </div>
-            </div>
-
-
-        </div>
         </div>
 
         <div class="flex flex-col items-center">
