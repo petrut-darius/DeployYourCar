@@ -29,23 +29,12 @@ class CarController extends Controller
         $tags = array_map('intval', $request->input('tags', []));
         $types = array_map('intval', $request->input('types', []));
 
+
         if ($query || !empty($tags) || !empty($types)) {
-            $cars = Car::search($query)
-                ->tap(function ($meiliBuilder) use ($tags, $types) {
-                    $filters = [];
-
-                    if (!empty($tags)) {
-                        $filters[] = 'tags_ids IN [' . implode(',', $tags) . ']';
-                    }
-
-                    if (!empty($types)) {
-                        $filters[] = 'types_ids IN [' . implode(',', $types) . ']';
-                    }
-
-                    if (!empty($filters)) {
-                        $meiliBuilder->raw();
-                    }
-                })
+            $cars = Car::query()
+                ->when($query, fn($q) => $q->where("model", "like", "%{$query}%"))
+                ->when($types, fn($q) => $q->whereHas("types", fn($q) => $q->whereIn("types.id", $types)))
+                ->when($tags, fn($q) => $q->whereHas("tags", fn($q) => $q->whereIn("tags.id", $tags)))
                 ->paginate(10);
         } else {
             $page = request('page', 1);
@@ -60,6 +49,8 @@ class CarController extends Controller
                 ])->paginate(10);
             });
         }
+
+
 
         return Inertia::render('Cars/Index', [
             'cars' => CarResource::collection($cars),

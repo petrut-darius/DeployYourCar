@@ -2,8 +2,6 @@
 import DangerButton from '@/Components/DangerButton.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { usePage, router, Link } from '@inertiajs/vue3'
-import { ref, onMounted, watch, computed } from 'vue';
-import axios from 'axios';
 import _ from 'lodash';
 
 const page = usePage();
@@ -68,7 +66,7 @@ function logout() {
 
     <!-- Footer -->
     <footer class="text-center">
-      © 2025 - DeployYourCar - thepdi
+      © {{ new Date().getFullYear() }} - DeployYourCar - thepdi
     </footer>
   </div>
 </template>

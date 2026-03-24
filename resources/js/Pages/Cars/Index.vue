@@ -3,7 +3,9 @@ import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { usePage, router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue';
+import axios from 'axios';
 import _ from 'lodash';
+
 defineProps({
     cars: Object
 })
@@ -12,7 +14,7 @@ const page = usePage();
 const types = page.props.types ?? []
 const tags = page.props.tags ?? []
 
-const q = ref(page.props.filters?.q ?? "")
+const carName= ref(page.props.filters?.carName ?? "")
 const selectedTypes = ref(page.props.filters?.types ?? [])
 const selectedTags = ref(page.props.filters?.tags ?? [])
 
@@ -20,7 +22,7 @@ const search = _.debounce(() => {
   router.get(
     route('cars.index'),
     {
-      q: q.value,
+      carName: carName.value,
       types: selectedTypes.value.map(Number),
       tags: selectedTags.value.map(Number),
     },
@@ -32,50 +34,48 @@ const search = _.debounce(() => {
   )
 }, 400)
 
+const isActiveTags = ref(false);
+const isActiveTypes = ref(false);
 
-watch([q, selectedTypes, selectedTags], search)
+const showTags = (() => {
+    isActiveTags.value = !isActiveTags.value;
+});
+
+const showTypes = (() => {
+    isActiveTypes.value = !isActiveTypes.value;
+});
+
+watch([carName, selectedTypes, selectedTags], search, {deep: true})
 
 </script>
 
 <template>
     <AppLayout>
         <!-- page heading-->
-
-        <div class="relative mx-auto">
-            <div class=" rounded-lg p-3 shadow-lg space-y-3 gap-4 flex">
-
-                <input
-                v-model="q"
-                type="text"
-                placeholder="Search car name…"
-                class="w-full rounded-md   text-sm px-3 py-2
-                        placeholder-gray-400 focus:ring-2  focus:outline-none"
-                />
+        <div class="mx-auto w-auto">
+            <div>
+                <input type="text" name="carName" v-model="carName" placeholder="car name?" class="rounded-md">
 
                 <div>
-                <p class="text-xs uppercase tracking-wide mb-1">Types</p>
-                <div class="flex flex-wrap gap-2">
-                    <label v-for="type in types" :key="type.id"
-                        class="flex items-center gap-1 px-2 py-1 rounded-md text-xs cursor-pointer hover:bg-gray-600">
-                    <input type="checkbox" class="accent-pink-400" :value="type.id" v-model="selectedTypes" />
-                    {{ type.name }}
-                    </label>
+                    <p v-on:click="showTypes" class="cursor-pointer">Types?</p>
+                    <div :class="isActiveTypes ? 'block' : 'hidden'">
+                        <span v-for="type in types" class="m-1" :key="type.id">
+                            <input type="checkbox" :value="type.id" v-model="selectedTypes">
+                            {{ type.name }}
+                        </span>
+                    </div>
                 </div>
-                </div>
-
                 <div>
-                <p class="text-xs uppercase tracking-wide mb-1">Tags</p>
-                <div class="flex flex-wrap gap-2">
-                    <label v-for="tag in tags" :key="tag.id"
-                        class="flex items-center gap-1 px-2 py-1 rounded-md text-xs cursor-pointer hover:bg-gray-600">
-                    <input type="checkbox" class="accent-pink-400" :value="tag.id" v-model="selectedTags" />
-                    {{ tag.name }}
-                    </label>
+                    <p v-on:click="showTags" class="cursor-pointer">Tags?</p>
+                    <div :class="isActiveTags ? 'block' : 'hidden'">
+                        <span v-for="tag in tags" class="mt-1" :key="tag.id">
+                            <input type="checkbox" :value="tag.id" v-model="selectedTags">
+                            {{ tag.name }}
+                        </span>
+                    </div>
                 </div>
-                </div>
-
-
             </div>
+
         </div>
 
         <div class="flex flex-col items-center">
@@ -85,7 +85,7 @@ watch([q, selectedTypes, selectedTags], search)
                 </h2>
 
                 <p class="text-sm text-gray-600">
-                    Engine: {{ car.engineCode }} ({{ car.displacement }}L)
+                    Engine: {{ car.engineCode }} ({{ car.displacement }} cm&#179;)
                 </p>
 
                 <p class="text-sm text-gray-600">
@@ -96,12 +96,17 @@ watch([q, selectedTypes, selectedTags], search)
                     Color: {{ car.color }}
                 </p>
 
-                <!-- Owner -->
                 <div v-if="car.owner" class="mt-2">
                     <p class="font-semibold">Owner:</p>
                     <p>{{ car.owner.name }}</p>
                 </div>
-                <!--
+
+                <div v-if="car.photos" class="mt-2">
+                    <span>Photos:</span>
+                    <div v-for="photo in car.photos" :key="photo.id">
+                        <img :src="photo.show_url" width="200">
+                    </div>
+                </div>
 
                 <div v-if="car.tags?.length" class="mt-2">
                     <p class="font-semibold">Tags:</p>
@@ -128,9 +133,9 @@ watch([q, selectedTypes, selectedTags], search)
                         </span>
                     </div>
                 </div>
-                -->
+
             </div>
-            <div class="flaot-end">
+            <div class="float-end">
                 <Pagination class="mt-4" :links="cars.meta.links"/>
             </div>
         </div>

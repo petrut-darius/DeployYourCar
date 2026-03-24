@@ -39,7 +39,7 @@ Route::get("/user_pdf/{user}", function(User $user) {
             ]);
         })->name("test.pdf")->download();
     } catch (\Throwable $e) {
-        dd($e->getMessage(), $e->getTraceAsString()); // dump error
+        dd($e->getMessage(), $e->getTraceAsString());
     }
 })->name("users.pdf");
 
@@ -48,11 +48,11 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
 
-        return redirect('dashboard');
-    })->middleware(["auth", 'signed'])->name('verification.verify');
+    return redirect('dashboard');
+})->middleware(["auth", 'signed'])->name('verification.verify');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
         return back()->with('message', 'Verification link sent!');
     })->middleware('throttle:6,1')->name('verification.send');
 
+    //cars
     Route::get('/cars/create', [CarController::class, 'create'])->name('cars.create');
     Route::post('/cars', [CarController::class, 'store'])->name('cars.store');
     Route::get('/cars/{car}/edit', [CarController::class, 'edit'])->name('cars.edit');
@@ -92,6 +93,3 @@ Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
 Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
 
 require __DIR__.'/auth.php';
-
-
-//midleware pt super-admin sa paota accesa /admin/plm

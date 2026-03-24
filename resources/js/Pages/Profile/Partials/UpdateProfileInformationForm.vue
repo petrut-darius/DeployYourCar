@@ -19,6 +19,7 @@ const user = usePage().props.auth.user;
 const form = useForm({
     name: user.name,
     email: user.email,
+    bio: user.bio,
 });
 </script>
 
@@ -67,6 +68,22 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="bio" value="Tell something about yourself - biography"/>
+
+                <TextInput
+                    id="bio"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.bio"
+                    required
+                    autofocus
+                />
+
+                <InputError class="mt-2" :message="form.errors.bio" />
+
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
