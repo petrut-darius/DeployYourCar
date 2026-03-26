@@ -28,24 +28,9 @@ class Car extends Model implements HasMedia
         "color",
     ];
 
-    public function toSearchableArray(): array {
-        $this->loadMissing(['types:id', 'tags:id']);
-
-        return [
-            'id' => $this->id,
-            'manufacture' => $this->manufacture,
-            'model' => $this->model,
-            'types_ids' => $this->types->pluck('id')->all(),
-            'tags_ids' => $this->tags->pluck('id')->all(),
-        ];
-    }
-
-    public function searchableAs(): string {
-        return "cars_index";
-    }
 
     public function registerMediaConversions(?Media $media = null):void {
-        $this->addMediaConversion("show_page")->width(600);
+        $this->addMediaCollection("cars")->useDisk("cars");
     }
 
     /** @use HasFactory<\Database\Factories\CarFactory> */

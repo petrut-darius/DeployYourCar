@@ -25,7 +25,7 @@ class CarController extends Controller
 
     public function index(Request $request)
     {
-        $query = $request->string('q')->toString();
+        $query = $request->string('carName')->toString();
         $tags = array_map('intval', $request->input('tags', []));
         $types = array_map('intval', $request->input('types', []));
 

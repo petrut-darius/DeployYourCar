@@ -36,11 +36,10 @@ class CarResource extends JsonResource
             "tags" => $this->tags ? TagResource::collection($this->tags) : null,
             "types" => $this->types ? TypeResource::collection($this->types) : null,
 
-            "photos" => $this->getMedia("photos")->map(function (Media $media) {
+            "photos" => $this->getMedia("cars")->map(function (Media $media) {
                 return [
                     "id" => $media->id,
                     "original_url" => $media->getUrl(),
-                    "show_url" => $media->getUrl("show_page")
                 ];
             }),
         ];

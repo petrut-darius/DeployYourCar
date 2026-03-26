@@ -10,8 +10,9 @@ const user = page.props.auth.user;
 function logout() {
   router.post(route("logout"));
 }
-</script>
 
+console.log(page.props.auth.mustVerifyEmail);
+</script>
 <template>
   <div>
             <!-- Navbar -->
@@ -23,14 +24,12 @@ function logout() {
             <div class="hidden md:flex items-center space-x-4">
                 <NavLink :href='route("cars.index")' :active="route().current('cars.index')">Cars</NavLink>
                 <NavLink v-if="user" :href='route("cars.yourCars")' :active="route().current('cars.yourCars')">Your Cars</NavLink>
-                <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('users.index')" :active="route().current('users.index')">Users</NavLink>
-                <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('permissions.index')" :active="route().current('permissions.index')">Permissions</NavLink>
-                <NavLink v-if="$page.props.auth?.can?.manageUsers" :href="route('groups.index')" :active="route().current('groups.index')">Groups</NavLink>
             </div>
         </div>
 
         <!-- Right Section -->
         <div v-if="user" class="flex items-center space-x-4">
+            <NavLink v-if="user" :href='route("profile.edit")' :active='route().current("profile.edit")'>Profile</NavLink>
 
             <!-- Create new (+) -->
             <Link v-if="$page.props.auth?.can?.createCar" :href='route("cars.create")' class="relative py-1 px-2 bg-pink-400 border rounded hover:text-white">Add Car</Link>
@@ -60,6 +59,26 @@ function logout() {
 
     <!-- Conținutul paginii -->
     <main class="m-4 border rounded w-3/5 mx-auto p-4">
+        <div v-if="page.props.auth.mustVerifyEmail && user.email_verified_at === null">
+            <p class="mt-2 text-sm text-gray-800 dark:text-gray-200">
+                Your email address is unverified.
+                <Link
+                    :href="route('verification.send')"
+                    method="post"
+                    as="button"
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                >
+                    Click here to re-send the verification email.
+                </Link>
+            </p>
+
+            <div
+                v-show="status === 'verification-link-sent'"
+                class="mt-2 text-sm font-medium text-green-600 dark:text-green-400"
+            >
+                A new verification link has been sent to your email address.
+            </div>
+        </div>
 
       <slot />
     </main>

@@ -8,11 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Context;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable //implements MustVerifyEmail -> trebuie sa faci sandbox pt asta, acuma il foloseam la alt proiect
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +25,7 @@ class User extends Authenticatable //implements MustVerifyEmail -> trebuie sa fa
     protected $fillable = [
         'name',
         'email',
+        "bio",
         'password',
         "permissions",
     ];
@@ -54,6 +58,14 @@ class User extends Authenticatable //implements MustVerifyEmail -> trebuie sa fa
             'password' => 'hashed',
             "permissions" => "array"
         ];
+    }
+
+    public function following() {
+        return $this->belongsToMany(User::class, "follow_user", "user_id", "following_id");
+    }
+
+    public function followers() {
+        return $this->belongsToMany(User::class, "follow_user", "following_id", "user_id");
     }
 
     public function getAllPermissions() {

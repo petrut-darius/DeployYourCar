@@ -33,8 +33,6 @@ class ProfileController extends Controller
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
-
-            //redirect to a send user verifiy email page
         }
 
         $request->user()->save();

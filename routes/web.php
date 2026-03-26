@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Car;
 use App\Http\Resources\CarResource;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\FollowingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\GroupsController;
@@ -25,6 +26,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get("/users/{user}", [UsersController::class, "show"])->name("users.show");
+
+Route::post("/users/{user}/follow", [FollowingsController::class, "store"])->name("following.store");
+Route::delete('users/{user}/unfollow', [FollowingsController::class, "destroy"])->name("following.destroy");
 
 Route::get("/user_pdf/{user}", function(User $user) {
     try{
@@ -43,31 +52,10 @@ Route::get("/user_pdf/{user}", function(User $user) {
     }
 })->name("users.pdf");
 
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-
-    return redirect('dashboard');
-})->middleware(["auth", 'signed'])->name('verification.verify');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/email/verify', function () {
-        return Inertia::render('Auth/VerifyEmail');
-    })->name('verification.notice');
-
-    Route::post('/email/verification-notification', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-
-        return back()->with('message', 'Verification link sent!');
-    })->middleware('throttle:6,1')->name('verification.send');
 
     //cars
     Route::get('/cars/create', [CarController::class, 'create'])->name('cars.create');
@@ -78,18 +66,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/yourCars', [CarController::class, 'yourCars'])->name('cars.yourCars');
     Route::delete('/cars/{car}/photo/{photo}', [CarController::class, 'destroyPhoto'])->name('cars.destroyPhoto');
-
-
-    //maybe..
-    Route::middleware("can:manage-users")->prefix("admin")->group(function() {
-        Route::resource('users', UsersController::class)->except([ 'create', 'store']);
-        Route::resource("permissions", PermissionsController::class)->except(["show"]);
-        Route::resource("groups", GroupsController::class)->except(["show"]);
-    });
-
 });
 
+//needs to stay right here cause the show page blocks the create page
 Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
 Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
+
 
 require __DIR__.'/auth.php';

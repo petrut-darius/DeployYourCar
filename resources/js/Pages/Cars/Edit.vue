@@ -212,7 +212,7 @@ const deletePhoto = async (carId, photoId) => {
 
                 <div class="flex flex-col items-center text-center">
                     <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
-                        <img :src="photo.show_url" class="rounded shadow mx-auto" />
+                        <img :src="photo.origianl_url" class="rounded shadow mx-auto" />
                         <DangerButton @click="deletePhoto(car.data.id, photo.id)" class="mt-6">
                             Delete photo
                         </DangerButton>

@@ -101,7 +101,7 @@ watch([carName, selectedTypes, selectedTags], search, {deep: true})
                     <p>{{ car.owner.name }}</p>
                 </div>
 
-                <div v-if="car.photos" class="mt-2">
+                <div v-if="car.photos.length != 0" class="mt-2">
                     <span>Photos:</span>
                     <div v-for="photo in car.photos" :key="photo.id">
                         <img :src="photo.show_url" width="200">

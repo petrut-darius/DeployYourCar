@@ -47,6 +47,13 @@ return [
             'report' => false,
         ],
 
+        "cars" => [
+            "driver" => "local",
+            "root" => storage_path("app/public/cars"),//folderu storage/app
+            "url" => env("APP_URL")."/storage/cars",//folderu public
+            "visibility" => "public",
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

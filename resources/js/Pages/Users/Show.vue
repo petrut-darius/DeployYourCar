@@ -1,12 +1,13 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { usePage,  Link } from '@inertiajs/vue3'
+import { usePage,  Link, useForm } from '@inertiajs/vue3'
 import axios from 'axios';
 
 const page = usePage();
 
-const {user} = defineProps({
-    user: Object, 
+const {user, isFollowing} = defineProps({
+    user: Object,
+    isFollowing: Boolean,
 });
 
 const getUserPdf = async (id) => {
@@ -29,9 +30,7 @@ const getUserPdf = async (id) => {
   }
 
 };
-
-
-
+const form = useForm({});
 </script>
 <template>
     <AppLayout>
@@ -44,9 +43,17 @@ const getUserPdf = async (id) => {
           Email: {{ user.email }}
         </div>
 
+        <div v-if="isFollowing && user">
+            <button @click="form.delete(route('following.destroy', {user: user.id}))" class="py-1 px-2 bg-blue-400 border rounded hover:text-white" :disabled="form.processing">Unfollow</button>
+        </div>
+
+        <div v-else>
+            <button @click="form.post(route('following.store', {user: user.id}))" class="py-1 px-2 bg-blue-400 border rounded hover:text-white" :disabled="form.processing">Follow</button>
+        </div>
+
         <div v-if="$page.props.auth?.can?.manageUsers">
-            <Link :href='route("users.edit", user.id)' as="button" class="py-1 px-2 bg-pink-400 border rounded hover:text-white">Edit</Link>
-            <Link v-if="$page.props.auth.user?.id !== user.id" :href='route("users.destroy", user.id)' method="delete" as="button" class="ml-2 py-1 px-2 bg-red-600 border rounded hover:text-white">Delete</Link>
+
+            blablablahere
         </div>
 
         <div v-if="user.permissions && user.permissions.length" class="w-full max-w-3xl p-6 rounded-xl shadow mt-6 bg-gray-600">

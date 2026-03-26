@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                     "manageUsers" => Auth::check() && Gate::allows("manage-users"),
                     "createCar" => Auth::check() ? Auth::user()->can("create", \App\Models\Car::class) : false,
                 ],
+                "mustVerifyEmail" => Auth::check() ? Auth::user() instanceof MustVerifyEmail : false,
             ],
         ];
     }

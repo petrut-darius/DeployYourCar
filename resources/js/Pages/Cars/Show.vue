@@ -5,7 +5,7 @@ defineProps({
     car: Object
 });
 
-const page = usePage()   
+const page = usePage()
 
 </script>
 <template>
@@ -57,14 +57,14 @@ const page = usePage()
               <span v-for="type in car.data.types" :key="type.id" class="px-2 py-1 text-xs bg-blue-200 rounded">{{ type.name }}</span>
           </div>
       </div>
-        
+
       <div v-if="car.data.story" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
         <h2 class="text-center text-3xl font-bold mb-6 text-white">Story of the car</h2>
         <div class="prose border border-gray-200 bg-gray-50 p-4 rounded-lg shadow-sm m-auto" v-html="car.data.story.bodyHtml"></div>
       </div>
       <div>
           <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
-            <img :src="photo.show_url" class="rounded shadow"/>
+            <img :src="photo.original_url" class="rounded shadow"/>
           </div>
       </div>
 
