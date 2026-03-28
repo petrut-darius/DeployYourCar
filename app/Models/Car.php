@@ -29,7 +29,7 @@ class Car extends Model implements HasMedia
     ];
 
 
-    public function registerMediaConversions(?Media $media = null):void {
+    public function registerMediaCollections(?Media $media = null):void {
         $this->addMediaCollection("cars")->useDisk("cars");
     }
 

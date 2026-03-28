@@ -201,7 +201,7 @@ const deletePhoto = async (carId, photoId) => {
                     multiple
                     @change="e => form.photos = Array.from(e.target.files)"
                     class="block mt-1"
-                    rules="mimes:jpg"
+                    accept="image/jpeg,image/png,image/jpg"
                 />
 
                 <InputError :message="form.errors.photos" class="mt-2"/>

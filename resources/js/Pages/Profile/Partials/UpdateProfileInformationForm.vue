@@ -20,6 +20,7 @@ const form = useForm({
     name: user.name,
     email: user.email,
     bio: user.bio,
+    profileImage: null,
 });
 </script>
 
@@ -36,9 +37,28 @@ const form = useForm({
         </header>
 
         <form
-            @submit.prevent="form.patch(route('profile.update'))"
+            @submit.prevent="form.transform(data => ({
+                ...data,
+                _method: 'PATCH',
+            })).post(route('profile.update'), {
+                preserveScroll: true,
+                forceFormData:true,
+            })"
             class="mt-6 space-y-6"
         >
+            <div>
+                <InputLabel for="profileImage" value="Profile image" />
+
+                <input
+                    type="file"
+                    @change="e => form.profileImage = e.target.files[0]"
+                    class="block mt-1"
+                    accept="image/jpeg,image/png,image/jpg"
+                />
+
+                <InputError class="mt-2" :message="form.errors.profileImage" />
+            </div>
+
             <div>
                 <InputLabel for="name" value="Name" />
 

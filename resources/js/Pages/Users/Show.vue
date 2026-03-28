@@ -35,6 +35,11 @@ const form = useForm({});
 <template>
     <AppLayout>
       <div class="flex flex-col items-center py-4 bg-gray-400 pt-6 rounded">
+        <div v-if="user.profile_image" class="text-center">
+            <p>Profile picture:</p>
+            <img :src="`/storage/${user.profile_image}`" alt="Profile image" width="400px">
+        </div>
+
         <div class="text-center text-5xl">
           {{ user.name }}
         </div>

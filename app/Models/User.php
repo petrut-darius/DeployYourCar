@@ -12,10 +12,10 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable implements MustVerifyEmail, HasMedia
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, InteractsWithMedia;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'name',
         'email',
         "bio",
+        "profile_image",
         'password',
         "permissions",
     ];

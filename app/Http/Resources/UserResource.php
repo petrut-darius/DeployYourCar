@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             "name" => $this->name,
             "email" => $this->email,
             "cars" => $this->cars ? CarResource::collection($this->cars) : null,
-            //if super admin show other fields
+            "profileImage" => $this->profile_image,
         ];
     }
 }
