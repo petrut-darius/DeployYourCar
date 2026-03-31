@@ -16,7 +16,8 @@ use Laravel\Scout\Searchable;
 
 class Car extends Model implements HasMedia
 {
-    use Searchable;
+    /** @use HasFactory<\Database\Factories\CarFactory> */
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = [
         "user_id",
@@ -33,8 +34,9 @@ class Car extends Model implements HasMedia
         $this->addMediaCollection("cars")->useDisk("cars");
     }
 
-    /** @use HasFactory<\Database\Factories\CarFactory> */
-    use HasFactory, InteractsWithMedia;
+    public function replies() {
+        return $this->morphMany(Reply::class, "repliable");
+    }
 
     public function owner() {
         return $this->belongsTo(User::class, "user_id");

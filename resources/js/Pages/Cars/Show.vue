@@ -1,12 +1,28 @@
 <script setup>
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ReplyItem from '@/Components/ReplyItem.vue';
+import TextInput from '@/Components/TextInput.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Link, usePage } from '@inertiajs/vue3'
-defineProps({
+import { Link, useForm, usePage } from '@inertiajs/vue3';
+
+const {car} = defineProps({
     car: Object
 });
 
 const page = usePage()
 
+const form = useForm({
+  content: "",
+})
+
+const submit = () => {
+  form.post(route("replies.storeForCar", {car: car.data.id}), {
+    preserveScroll: true,
+    forceFormData: true,
+  })
+}
 </script>
 <template>
   <AppLayout>
@@ -67,7 +83,28 @@ const page = usePage()
             <img :src="photo.original_url" class="rounded shadow"/>
           </div>
       </div>
+      <div>
+          <h2>Comments & Questions</h2>
+          <div v-if="car.data.replies?.length">
+            <ReplyItem v-for="reply in car.data.replies" :key="reply.id" :reply="reply"/>
+          </div>
+          <div v-else>
+            <p>There are no comments or questions, at this moment!</p>
+          </div>
+          <form @submit.prevent="submit">
+            <div>
+              <InputLabel for="content" value="What do you think about this car?" />
 
+              <TextInput v-model="form.content" id="content" type="text" class="mt-1 block w-full" />
+
+              <InputError :message="form.errors.content" class="mt-2" />
+
+              <PrimaryButton class="!text-white !bg-green-400 hover:!bg-green-800" :class="{'opacity-25': form.processing}" :disabled="form.processing">
+                Send
+              </PrimaryButton>
+            </div>
+          </form>
+      </div>
     </div>
   </AppLayout>
 </template>

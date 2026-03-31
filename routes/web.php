@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RepliesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -66,11 +67,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/yourCars', [CarController::class, 'yourCars'])->name('cars.yourCars');
     Route::delete('/cars/{car}/photo/{photo}', [CarController::class, 'destroyPhoto'])->name('cars.destroyPhoto');
+
+    Route::post("/car/{car}/replies", [RepliesController::class, "storeForCar"])->name("replies.storeForCar");
+    Route::post("/reply/{reply}/replies", [RepliesController::class, "storeForReply"])->name("replies.storeForReply");
+    Route::delete("/replies/{reply}", [RepliesController::class,"destroy"])->name("replies.destroy");
 });
 
 //needs to stay right here cause the show page blocks the create page
 Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
 Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
 
+Route::get("/replies/{reply}/replies", [RepliesController::class, "replies"]);
 
 require __DIR__.'/auth.php';

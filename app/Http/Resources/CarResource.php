@@ -35,13 +35,24 @@ class CarResource extends JsonResource
             "story" => $this->story ? StoryResource::make($this->story) : null,
             "tags" => $this->tags ? TagResource::collection($this->tags) : null,
             "types" => $this->types ? TypeResource::collection($this->types) : null,
-
             "photos" => $this->getMedia("cars")->map(function (Media $media) {
                 return [
                     "id" => $media->id,
                     "original_url" => $media->getUrl(),
                 ];
             }),
+            "replies" => $this->replies->map(function ($reply) {
+                return [
+                    "id" => $reply->id,
+                    "content" => $reply->content,
+                    "replies_count" => $reply->replies_count,
+                    "user" => [
+                        "id" => $reply->user->id,
+                        "name"=> $reply->user->name,
+                    ]
+                ]; 
+            }),
+            
         ];
     }
 }

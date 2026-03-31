@@ -17,7 +17,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.11",
-        "predis/predis": "^3.3",
+        "predis/predis": "^3.4",
         "spatie/image": "^3.8",
         "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-pdf": "^1.8",

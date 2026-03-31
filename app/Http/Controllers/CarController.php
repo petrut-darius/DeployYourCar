@@ -13,7 +13,6 @@ use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use App\CarAbilities;
 use Illuminate\Support\Facades\Cache;
-use Meilisearch\Scout\SearchableMeilisearchEngine;
 use App\Actions\CreateCar;
 use App\Actions\UpdateCar;
 
@@ -122,7 +121,11 @@ class CarController extends Controller
         //dd(auth()->user()->can('create', \App\Models\Car::class));
 
         $car = Cache::tags(["cars"])->remember("show:{$car->id}", 60, function() use ($car){
-            return $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media"]);
+            $car->load(['owner', 'modifications', 'story', 'tags', 'types', "media", "replies" => function($q) {
+                $q->withCount("replies")->with("user");
+            }]);
+
+            return $car;
         });
 
         return Inertia::render("Cars/Show", [
