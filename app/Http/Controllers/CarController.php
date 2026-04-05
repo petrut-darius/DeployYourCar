@@ -15,6 +15,7 @@ use App\CarAbilities;
 use Illuminate\Support\Facades\Cache;
 use App\Actions\CreateCar;
 use App\Actions\UpdateCar;
+use InertiaToast\Facades\Toast;
 
 class CarController extends Controller
 {
@@ -49,6 +50,8 @@ class CarController extends Controller
             });
         }
 
+        Toast::success("Cars index page.");
+        Toast::error("Not cars show page.");
 
 
         return Inertia::render('Cars/Index', [

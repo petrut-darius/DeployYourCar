@@ -37,6 +37,7 @@
     "dependencies": {
         "@inertiajs/progress": "^0.1.2",
         "@inertiajs/vue3": "^2.0.0",
+        "@laravel-inertia-toast/vue": "^0.3.1",
         "@tailwindcss/vite": "^4.1.17",
         "@tiptap/pm": "^3.13.0",
         "@tiptap/starter-kit": "^3.13.0",

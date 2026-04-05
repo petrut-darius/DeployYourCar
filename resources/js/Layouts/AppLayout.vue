@@ -2,6 +2,7 @@
 import DangerButton from '@/Components/DangerButton.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { usePage, router, Link } from '@inertiajs/vue3'
+import Toasts from '@/Components/Toasts.vue';
 import _ from 'lodash';
 
 const page = usePage();
@@ -59,6 +60,8 @@ console.log(page.props.auth.mustVerifyEmail);
 
     <!-- Conținutul paginii -->
     <main class="m-4 border rounded w-3/5 mx-auto p-4">
+        <Toasts />
+
         <div v-if="page.props.auth.mustVerifyEmail && user.email_verified_at === null">
             <p class="mt-2 text-sm text-gray-800 dark:text-gray-200">
                 Your email address is unverified.
@@ -81,6 +84,7 @@ console.log(page.props.auth.mustVerifyEmail);
         </div>
 
       <slot />
+
     </main>
 
     <!-- Footer -->
