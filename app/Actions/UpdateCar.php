@@ -58,7 +58,7 @@ class UpdateCar
 
             if(!empty($data["photos"])) {
                 foreach((array) $data["photos"] as $photo) {
-                    $car->addMedia($photo)->toMediaCollection('photos', "public");
+                    $car->addMedia($photo)->toMediaCollection('cars', "cars");
                 }
             }
 

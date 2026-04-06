@@ -29,13 +29,16 @@ class Car extends Model implements HasMedia
         "color",
     ];
 
-
     public function registerMediaCollections(?Media $media = null):void {
         $this->addMediaCollection("cars")->useDisk("cars");
     }
 
     public function replies() {
         return $this->morphMany(Reply::class, "repliable");
+    }
+
+    public function likes() {
+        return $this->morphMany(Like::class, "likeable");
     }
 
     public function owner() {

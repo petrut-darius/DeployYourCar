@@ -49,7 +49,8 @@ class CarResource extends JsonResource
                     "user" => [
                         "id" => $reply->user->id,
                         "name"=> $reply->user->name,
-                    ]
+                    ],
+                    "isLiking" => auth()->check() ? $reply->likes()->where("user_id", auth()->id())->exists() : false,
                 ]; 
             }),
             

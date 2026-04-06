@@ -7,22 +7,25 @@ import TextInput from '@/Components/TextInput.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
-const {car} = defineProps({
-    car: Object
+const {car, isLiking} = defineProps({
+    car: Object,
+    isLiking: Boolean,
 });
 
 const page = usePage()
 
-const form = useForm({
+const formForCar = useForm({
   content: "",
 })
 
-const submit = () => {
-  form.post(route("replies.storeForCar", {car: car.data.id}), {
+const submitForCar = () => {
+  formForCar.post(route("replies.storeForCar", {car: car.data.id}), {
     preserveScroll: true,
     forceFormData: true,
   })
 }
+
+const formForLike = useForm({});
 </script>
 <template>
   <AppLayout>
@@ -36,6 +39,13 @@ const submit = () => {
       </div>
       <div>
         <p>Owner: <b>{{ car.data.owner.name }}</b></p>
+      </div>
+      <div v-if="isLiking && page.props.auth.user">
+          <button @click="formForLike.delete(route('likeable.destroyForCar', { car: car.data.id }))" class="py-1 px-2 bg-blue-400 border rounded hover:text-white">Dislike</button>
+      </div>
+
+      <div v-else>
+          <button @click="formForLike.post(route('likeable.storeForCar', { car: car.data.id }))" class="py-1 px-2 bg-blue-400 border rounded hover:text-white">Like</button>
       </div>
 
       <div v-if="car.data.modifications && car.data.modifications.length" class="w-full max-w-3xl p-6 rounded-xl shadow mt-6 bg-gray-600">
@@ -91,15 +101,15 @@ const submit = () => {
           <div v-else>
             <p>There are no comments or questions, at this moment!</p>
           </div>
-          <form @submit.prevent="submit">
+          <form @submit.prevent="submitForCar">
             <div>
               <InputLabel for="content" value="What do you think about this car?" />
 
-              <TextInput v-model="form.content" id="content" type="text" class="mt-1 block w-full" />
+              <TextInput v-model="formForCar.content" id="content" type="text" class="mt-1 block w-full" />
 
-              <InputError :message="form.errors.content" class="mt-2" />
+              <InputError :message="formForCar.errors.content" class="mt-2" />
 
-              <PrimaryButton class="!text-white !bg-green-400 hover:!bg-green-800" :class="{'opacity-25': form.processing}" :disabled="form.processing">
+              <PrimaryButton class="!text-white !bg-green-400 hover:!bg-green-800" :class="{'opacity-25': formForCar.processing}" :disabled="formForCar.processing">
                 Send
               </PrimaryButton>
             </div>

@@ -5,18 +5,13 @@ use App\Http\Controllers\RepliesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\Car;
-use App\Http\Resources\CarResource;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\FollowingsController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\PermissionsController;
-use App\Http\Controllers\GroupsController;
 use App\Models\User;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\Browsershot\Browsershot;
+use App\Http\Controllers\LikesController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,9 +27,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get("/users/{user}", [UsersController::class, "show"])->name("users.show");
-
-Route::post("/users/{user}/follow", [FollowingsController::class, "store"])->name("following.store");
-Route::delete('users/{user}/unfollow', [FollowingsController::class, "destroy"])->name("following.destroy");
 
 Route::get("/user_pdf/{user}", function(User $user) {
     try{
@@ -70,7 +62,16 @@ Route::middleware('auth')->group(function () {
 
     Route::post("/car/{car}/replies", [RepliesController::class, "storeForCar"])->name("replies.storeForCar");
     Route::post("/reply/{reply}/replies", [RepliesController::class, "storeForReply"])->name("replies.storeForReply");
-    Route::delete("/replies/{reply}", [RepliesController::class,"destroy"])->name("replies.destroy");
+    Route::delete("/replies/{reply}", [RepliesController::class, "destroy"])->name("replies.destroy");
+
+    Route::post("/users/{user}/follow", [FollowingsController::class, "store"])->name("following.store");
+    Route::delete('users/{user}/unfollow', [FollowingsController::class, "destroy"])->name("following.destroy");
+
+    Route::post("/cars/{car}/like", [LikesController::class, "storeForCar"])->name("likeable.storeForCar");
+    Route::delete("/cars/{car}/dislike", [LikesController::class,"destroyForCar"])->name("likeable.destroyForCar");
+
+    Route::post("/replies/{reply}/like", [LikesController::class, "storeForReply"])->name("likeable.storeForReply");
+    Route::delete("/replies/{reply}/dislike", [LikesController::class,"destroyForReply"])->name("likeable.destroyForReply");
 });
 
 //needs to stay right here cause the show page blocks the create page

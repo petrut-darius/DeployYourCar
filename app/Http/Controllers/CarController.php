@@ -49,9 +49,11 @@ class CarController extends Controller
                 ])->paginate(10);
             });
         }
-
+        
+        /*
         Toast::success("Cars index page.");
         Toast::error("Not cars show page.");
+        */
 
 
         return Inertia::render('Cars/Index', [
@@ -137,6 +139,10 @@ class CarController extends Controller
                 "update" => auth()->user() ? auth()->user()->can(CarAbilities::UPDATE->value, $car) : false,
                 "delete" => auth()->user() ? auth()->user()->can(CarAbilities::DELETE->value, $car) : false,
             ],
+            "isLiking" => auth()->user()->likes()->where([
+                "likeable_type" => 'App\Models\Car',
+                "likeable_id" => $car->id,
+            ])->exists(),
         ]);
 
         //cross site pt car->story cu purify
@@ -196,7 +202,7 @@ class CarController extends Controller
 
     public function destroyPhoto(Car $car, $photo_id) {
         //dd($car->id, $photo_id);
-        $media = $car->media()->where("id", $photo_id)->where("collection_name", "photos")->first();
+        $media = $car->media()->where("id", $photo_id)->where("collection_name", "cars")->first();
 
         if(!$media) {
             abort(404, "Photo not found");

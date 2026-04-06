@@ -54,6 +54,17 @@ class RepliesController extends Controller
     }
 
     public function replies(Reply $reply) {
-        return $reply->replies()->withCount("replies")->with("user")->get();
+        return $reply->replies()->withCount("replies")->with("user")->get()->map(function ($reply) {
+            return [
+                "id" => $reply->id,
+                "content" => $reply->content,
+                "replies_count" => $reply->replies_count,
+                "user" => [
+                    "id" => $reply->user->id,
+                    "name"=> $reply->user->name,
+                ],
+                "isLiking" => auth()->check() ? $reply->likes()->where("user_id", auth()->id())->exists() : false,
+            ];             
+        });
     }
 }

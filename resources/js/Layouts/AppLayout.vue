@@ -11,8 +11,6 @@ const user = page.props.auth.user;
 function logout() {
   router.post(route("logout"));
 }
-
-console.log(page.props.auth.mustVerifyEmail);
 </script>
 <template>
   <div>

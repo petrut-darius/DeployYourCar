@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import axios from "axios";
 import { router, usePage, useForm } from "@inertiajs/vue3";
 import InputError from '@/Components/InputError.vue';
@@ -22,7 +22,7 @@ async function loadReplies() {
     loaded.value = true
 }
 
-function deleteReply() {
+function deleteReply(reply) {
     router.delete(route("replies.destroy", { reply: reply.id}), {
         preserveScroll: true,
     })
@@ -43,10 +43,17 @@ const submit = () => {
     }
   })
 }
+
+const formForReply = useForm({});
+
+const isLiking = computed(() => reply.isLiking ?? false)
+
+const emit = defineEmits(["liked"])
 </script>
 <template>
     <div>
-        <p>{{ reply.content }} <b>{{ reply.user.name }}</b> <button v-if="reply.user.id == page.props.auth?.user.id" @click="deleteReply">Delete</button> <span @click="isActive = !isActive">reply to this</span></p>
+        <p>{{ reply.content }} <b>{{ reply.user.name }}</b> <button v-if="reply.user.id == page.props.auth?.user.id" @click="deleteReply(reply)">Delete</button> <span @click="isActive = !isActive">reply to this</span>
+            &nbsp<span v-if=" isLiking && page.props.auth" @click="formForReply.delete(route('likeable.destroyForReply', {reply: reply.id}), {preserveScroll: true, onSuccess: () => emit('liked')})">Dislike</span> <span v-else @click="formForReply.post(route('likeable.storeForReply', {reply: reply.id}), {preserveScroll: true, onSuccess: () => emit('liked')})">Like</span></p>
 
         <form @submit.prevent="submit">
             <div :class="isActive ? 'block' : 'hidden'">
@@ -62,10 +69,10 @@ const submit = () => {
             </div>
         </form>
 
-        <button v-if="reply.replies_count > 0 && !loaded" @click="loadReplies"> See more...({{ reply.replies_count }})</button>
+        <button v-if="reply.replies_count > 0 && !loaded" @click="loadReplies" > See more...({{ reply.replies_count }})</button>
 
         <div v-if="loaded">
-            <ReplyItem v-for="child in children" :key="child.id" :reply="child" />
+            <ReplyItem v-for="child in children" :key="child.id" :reply="child" @liked="loadReplies"/>
         </div>
     </div>
 </template>

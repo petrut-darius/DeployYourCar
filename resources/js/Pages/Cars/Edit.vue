@@ -26,15 +26,15 @@ const form = useForm({
     story: car.data.story?.bodyHtml ?? "plm",
     photos: [],
     modifications: car.data.modifications ?? [
-        { name: null, description: null, reason: null }
+        { name: "", description: "", reason: "" }
     ]
 });
 
 const addModification = () => {
     form.modifications.push({
-        name: null,
-        description: null,
-        reason: null
+        name: "",
+        description: "",
+        reason: ""
     });
 };
 

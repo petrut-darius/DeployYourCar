@@ -26,7 +26,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(InertiaToast, {
-                duration: 2500,
+                duration: 3500,
                 position: 'top-right',
                 maxVisible: 5,
             });

@@ -1,5 +1,14 @@
 <script setup>
 import { toastStore } from '@laravel-inertia-toast/vue';
+
+function startTimer(toast) {
+  const duration = toast.duration ?? toastStore.config.duration;
+
+  if(duration > 0) {
+    setTimeout(() => toastStore.removeToast(toast.id), duration);
+  }
+}
+
 </script>
 
 <template>
@@ -8,6 +17,7 @@ import { toastStore } from '@laravel-inertia-toast/vue';
       <div
         v-for="toast in toastStore.items"
         :key="toast.id"
+        @vue:mounted="startTimer(toast)"
         class="w-40 flex"
         :class="{
           'bg-green-500': toast.level === 'success',

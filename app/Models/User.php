@@ -8,9 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Context;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Like;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -59,6 +57,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             "permissions" => "array"
         ];
+    }
+
+    public function likes() {
+        return $this->hasMany(Like::class);
     }
 
     public function following() {
