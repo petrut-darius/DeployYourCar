@@ -32,7 +32,13 @@ class CarController extends Controller
 
         if ($query || !empty($tags) || !empty($types)) {
             $cars = Car::query()
-                ->when($query, fn($q) => $q->where("model", "like", "%{$query}%"))
+                ->when($query, fn($q) => $q->where("model", "like", "%{$query}%")
+                        ->orWhere("manufacture", "like", "%{$query}%")
+                        ->orWhereRaw("manufacture || ' ' || model like ?", ["%{$query}%"])//manufacutremodel, modelmanufacutre, model manufacture
+                        ->orWhereRaw("manufacture || '' || model like ?", ["%{$query}%"])
+                        ->orWhereRaw("model || ' ' || manufacture like ?", ["%{$query}%"])
+                        ->orWhereRaw("model || '' || manufacture like ?", ["%{$query}%"])
+                        )
                 ->when($types, fn($q) => $q->whereHas("types", fn($q) => $q->whereIn("types.id", $types)))
                 ->when($tags, fn($q) => $q->whereHas("tags", fn($q) => $q->whereIn("tags.id", $tags)))
                 ->paginate(10);
