@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\NewFollower;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,8 @@ class FollowingsController extends Controller
 
         if(!$user->following()->where("following_id", $followingUser->id)->exists()) {
             $user->following()->attach($followingUser->id);
+
+            $followingUser->notify(new NewFollower($user));
         }
     }
 
