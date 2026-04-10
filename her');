@@ -1,0 +1,471 @@
+[90m= [39m[34;4mReflectionClass[39;24m {#7622
+    +[1mname[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+    [34mextends[39m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+    [34mimplements[39m: [
+      [32m"[39m[32mIlluminate[39m\\[32mContracts[39m\\[32mBroadcasting[39m\\[32mBroadcaster[39m[32m"[39m,
+    ],
+    [34mconstants[39m: [],
+    [34mproperties[39m: [
+      [34m"[39m[34mpusher[39m[34m"[39m => [34;4mReflectionProperty[39;24m {#7577
+        +[1mname[22m: [32m"[39m[32mpusher[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+        [34mextra[39m: {
+          [34mdocComment[39m: <<<[32mEOS[39m
+            [32m/**[39m
+            [32m     * The Pusher SDK instance.[39m
+            [32m     *[39m
+            [32m     * @var [39m\\[32mPusher[39m\\[32mPusher[39m
+            [32m     */[39m
+            [32mEOS[39m,
+        },
+      },
+      [34m"[39m[34mallowJsonp[39m[34m"[39m => [34;4mReflectionProperty[39;24m {#7621
+        +[1mname[22m: [32m"[39m[32mallowJsonp[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+        [34mextra[39m: {
+          [34mdocComment[39m: <<<[32mEOS[39m
+            [32m/**[39m
+            [32m     * Indicates if JSONP callbacks are allowed on authorization.[39m
+            [32m     *[39m
+            [32m     * @var bool[39m
+            [32m     */[39m
+            [32mEOS[39m,
+        },
+      },
+      [34m"[39m[34mauthenticatedUserCallback[39m[34m"[39m => [34;4mReflectionProperty[39;24m {#7619
+        +[1mname[22m: [32m"[39m[32mauthenticatedUserCallback[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+        [34mextra[39m: {
+          [34mdocComment[39m: <<<[32mEOS[39m
+            [32m/**[39m
+            [32m     * The callback to resolve the authenticated user information.[39m
+            [32m     *[39m
+            [32m     * @var [39m\\[32mClosure|null[39m
+            [32m     */[39m
+            [32mEOS[39m,
+        },
+      },
+      [34m"[39m[34mchannels[39m[34m"[39m => [34;4mReflectionProperty[39;24m {#7618
+        +[1mname[22m: [32m"[39m[32mchannels[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+        [34mextra[39m: {
+          [34mdocComment[39m: <<<[32mEOS[39m
+            [32m/**[39m
+            [32m     * The registered channel authenticators.[39m
+            [32m     *[39m
+            [32m     * @var array[39m
+            [32m     */[39m
+            [32mEOS[39m,
+        },
+      },
+      [34m"[39m[34mchannelOptions[39m[34m"[39m => [34;4mReflectionProperty[39;24m {#7617
+        +[1mname[22m: [32m"[39m[32mchannelOptions[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+        [34mextra[39m: {
+          [34mdocComment[39m: <<<[32mEOS[39m
+            [32m/**[39m
+            [32m     * The registered channel options.[39m
+            [32m     *[39m
+            [32m     * @var array[39m
+            [32m     */[39m
+            [32mEOS[39m,
+        },
+      },
+      [34m"[39m[34mbindingRegistrar[39m[34m"[39m => [34;4mReflectionProperty[39;24m {#7616
+        +[1mname[22m: [32m"[39m[32mbindingRegistrar[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+        [34mextra[39m: {
+          [34mdocComment[39m: <<<[32mEOS[39m
+            [32m/**[39m
+            [32m     * The binding registrar instance.[39m
+            [32m     *[39m
+            [32m     * @var [39m\\[32mIlluminate[39m\\[32mContracts[39m\\[32mRouting[39m\\[32mBindingRegistrar[39m
+            [32m     */[39m
+            [32mEOS[39m,
+        },
+      },
+    ],
+    [34mmethods[39m: [
+      [34m"[39m[34m__construct[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7615
+        +[1mname[22m: [32m"[39m[32m__construct[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$pusher[39m: [34;4mReflectionParameter[39;24m {#7697
+            +[1mname[22m: [32m"[39m[32mpusher[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: [32m"[39m[32mPusher[39m\\[32mPusher[39m[32m"[39m,
+          },
+          [34m$allowJsonp[39m: [34;4mReflectionParameter[39;24m {#7694
+            +[1mname[22m: [32m"[39m[32mallowJsonp[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+            [34mtypeHint[39m: [32m"[39m[32mbool[39m[32m"[39m,
+            [34mdefault[39m: [36mfalse[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mresolveAuthenticatedUser[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7614
+        +[1mname[22m: [32m"[39m[32mresolveAuthenticatedUser[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#7695
+            +[1mname[22m: [32m"[39m[32mrequest[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mauth[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7613
+        +[1mname[22m: [32m"[39m[32mauth[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#7702
+            +[1mname[22m: [32m"[39m[32mrequest[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mvalidAuthenticationResponse[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7612
+        +[1mname[22m: [32m"[39m[32mvalidAuthenticationResponse[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#7705
+            +[1mname[22m: [32m"[39m[32mrequest[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$result[39m: [34;4mReflectionParameter[39;24m {#7706
+            +[1mname[22m: [32m"[39m[32mresult[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mdecodePusherResponse[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7611
+        +[1mname[22m: [32m"[39m[32mdecodePusherResponse[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#7709
+            +[1mname[22m: [32m"[39m[32mrequest[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$response[39m: [34;4mReflectionParameter[39;24m {#7710
+            +[1mname[22m: [32m"[39m[32mresponse[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mbroadcast[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7610
+        +[1mname[22m: [32m"[39m[32mbroadcast[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channels[39m: [34;4mReflectionParameter[39;24m {#7713
+            +[1mname[22m: [32m"[39m[32mchannels[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: [32m"[39m[32marray[39m[32m"[39m,
+          },
+          [34m$event[39m: [34;4mReflectionParameter[39;24m {#7714
+            +[1mname[22m: [32m"[39m[32mevent[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+          [34m$payload[39m: [34;4mReflectionParameter[39;24m {#7715
+            +[1mname[22m: [32m"[39m[32mpayload[39m[32m"[39m,
+            [34mposition[39m: [35m2[39m,
+            [34mtypeHint[39m: [32m"[39m[32marray[39m[32m"[39m,
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mgetPusher[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7656
+        +[1mname[22m: [32m"[39m[32mgetPusher[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34msetPusher[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7657
+        +[1mname[22m: [32m"[39m[32msetPusher[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$pusher[39m: [34;4mReflectionParameter[39;24m {#7719
+            +[1mname[22m: [32m"[39m[32mpusher[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mresolveAuthenticatedUserUsing[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7658
+        +[1mname[22m: [32m"[39m[32mresolveAuthenticatedUserUsing[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$callback[39m: [34;4mReflectionParameter[39;24m {#7722
+            +[1mname[22m: [32m"[39m[32mcallback[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: [32m"[39m[32mClosure[39m[32m"[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mchannel[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7659
+        +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7725
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$callback[39m: [34;4mReflectionParameter[39;24m {#7726
+            +[1mname[22m: [32m"[39m[32mcallback[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+          [34m$options[39m: [34;4mReflectionParameter[39;24m {#7727
+            +[1mname[22m: [32m"[39m[32moptions[39m[32m"[39m,
+            [34mposition[39m: [35m2[39m,
+            [34mdefault[39m: [],
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mverifyUserCanAccessChannel[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7660
+        +[1mname[22m: [32m"[39m[32mverifyUserCanAccessChannel[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#7730
+            +[1mname[22m: [32m"[39m[32mrequest[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7731
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mextractAuthParameters[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7661
+        +[1mname[22m: [32m"[39m[32mextractAuthParameters[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$pattern[39m: [34;4mReflectionParameter[39;24m {#7734
+            +[1mname[22m: [32m"[39m[32mpattern[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7735
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+          [34m$callback[39m: [34;4mReflectionParameter[39;24m {#7736
+            +[1mname[22m: [32m"[39m[32mcallback[39m[32m"[39m,
+            [34mposition[39m: [35m2[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mextractParameters[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7662
+        +[1mname[22m: [32m"[39m[32mextractParameters[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$callback[39m: [34;4mReflectionParameter[39;24m {#7739
+            +[1mname[22m: [32m"[39m[32mcallback[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mextractParametersFromClass[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7663
+        +[1mname[22m: [32m"[39m[32mextractParametersFromClass[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$callback[39m: [34;4mReflectionParameter[39;24m {#7742
+            +[1mname[22m: [32m"[39m[32mcallback[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mextractChannelKeys[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7664
+        +[1mname[22m: [32m"[39m[32mextractChannelKeys[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$pattern[39m: [34;4mReflectionParameter[39;24m {#7745
+            +[1mname[22m: [32m"[39m[32mpattern[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7746
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mresolveBinding[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7665
+        +[1mname[22m: [32m"[39m[32mresolveBinding[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$key[39m: [34;4mReflectionParameter[39;24m {#7749
+            +[1mname[22m: [32m"[39m[32mkey[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$value[39m: [34;4mReflectionParameter[39;24m {#7750
+            +[1mname[22m: [32m"[39m[32mvalue[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+          [34m$callbackParameters[39m: [34;4mReflectionParameter[39;24m {#7751
+            +[1mname[22m: [32m"[39m[32mcallbackParameters[39m[32m"[39m,
+            [34mposition[39m: [35m2[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mresolveExplicitBindingIfPossible[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7666
+        +[1mname[22m: [32m"[39m[32mresolveExplicitBindingIfPossible[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$key[39m: [34;4mReflectionParameter[39;24m {#7754
+            +[1mname[22m: [32m"[39m[32mkey[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$value[39m: [34;4mReflectionParameter[39;24m {#7755
+            +[1mname[22m: [32m"[39m[32mvalue[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mresolveImplicitBindingIfPossible[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7667
+        +[1mname[22m: [32m"[39m[32mresolveImplicitBindingIfPossible[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$key[39m: [34;4mReflectionParameter[39;24m {#7758
+            +[1mname[22m: [32m"[39m[32mkey[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$value[39m: [34;4mReflectionParameter[39;24m {#7759
+            +[1mname[22m: [32m"[39m[32mvalue[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+          [34m$callbackParameters[39m: [34;4mReflectionParameter[39;24m {#7760
+            +[1mname[22m: [32m"[39m[32mcallbackParameters[39m[32m"[39m,
+            [34mposition[39m: [35m2[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34misImplicitlyBindable[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7668
+        +[1mname[22m: [32m"[39m[32misImplicitlyBindable[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$key[39m: [34;4mReflectionParameter[39;24m {#7763
+            +[1mname[22m: [32m"[39m[32mkey[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$parameter[39m: [34;4mReflectionParameter[39;24m {#7764
+            +[1mname[22m: [32m"[39m[32mparameter[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mformatChannels[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7669
+        +[1mname[22m: [32m"[39m[32mformatChannels[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channels[39m: [34;4mReflectionParameter[39;24m {#7767
+            +[1mname[22m: [32m"[39m[32mchannels[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+            [34mtypeHint[39m: [32m"[39m[32marray[39m[32m"[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mbinder[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7670
+        +[1mname[22m: [32m"[39m[32mbinder[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mnormalizeChannelHandlerToCallable[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7671
+        +[1mname[22m: [32m"[39m[32mnormalizeChannelHandlerToCallable[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$callback[39m: [34;4mReflectionParameter[39;24m {#7771
+            +[1mname[22m: [32m"[39m[32mcallback[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mretrieveUser[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7672
+        +[1mname[22m: [32m"[39m[32mretrieveUser[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$request[39m: [34;4mReflectionParameter[39;24m {#7774
+            +[1mname[22m: [32m"[39m[32mrequest[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7775
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mretrieveChannelOptions[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7673
+        +[1mname[22m: [32m"[39m[32mretrieveChannelOptions[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7778
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mchannelNameMatchesPattern[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7674
+        +[1mname[22m: [32m"[39m[32mchannelNameMatchesPattern[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7781
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+          [34m$pattern[39m: [34;4mReflectionParameter[39;24m {#7782
+            +[1mname[22m: [32m"[39m[32mpattern[39m[32m"[39m,
+            [34mposition[39m: [35m1[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mprotected[39m[32m"[39m,
+      },
+      [34m"[39m[34mgetChannels[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7675
+        +[1mname[22m: [32m"[39m[32mgetChannels[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mBroadcaster[39m[32m"[39m,
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34misGuardedChannel[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7676
+        +[1mname[22m: [32m"[39m[32misGuardedChannel[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7786
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+      [34m"[39m[34mnormalizeChannelName[39m[34m"[39m => [34;4mReflectionMethod[39;24m {#7677
+        +[1mname[22m: [32m"[39m[32mnormalizeChannelName[39m[32m"[39m,
+        +[1mclass[22m: [32m"[39m[32mIlluminate[39m\\[32mBroadcasting[39m\\[32mBroadcasters[39m\\[32mPusherBroadcaster[39m[32m"[39m,
+        [34mparameters[39m: {
+          [34m$channel[39m: [34;4mReflectionParameter[39;24m {#7789
+            +[1mname[22m: [32m"[39m[32mchannel[39m[32m"[39m,
+            [34mposition[39m: [35m0[39m,
+          },
+        },
+        [34mmodifiers[39m: [32m"[39m[32mpublic[39m[32m"[39m,
+      },
+    ],
+  }

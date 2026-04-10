@@ -14,7 +14,7 @@ class NewFollower extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $follower) {}
+    public function __construct(private User $follower) {}
 
     /**
      * Get the notification's delivery channels.

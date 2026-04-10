@@ -1,14 +1,18 @@
 <script setup>
+import { onMounted, ref } from 'vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { usePage, router, Link } from '@inertiajs/vue3'
 import Toasts from '@/Components/Toasts.vue';
 import _ from 'lodash';
+import NotificationBell from '@/Components/NotificationBell.vue';
+import { destroyNotifications } from '@/Composables/useNotifications';
 
 const page = usePage();
 const user = page.props.auth.user;
 
 function logout() {
+    destroyNotifications();
   router.post(route("logout"));
 }
 </script>
@@ -32,6 +36,8 @@ function logout() {
 
             <!-- Create new (+) -->
             <Link v-if="$page.props.auth?.can?.createCar" :href='route("cars.create")' class="relative py-1 px-2 bg-pink-400 border rounded hover:text-white">Add Car</Link>
+            
+            <NotificationBell v-if="user" />
 
             <form @click="logout">
                 <DangerButton class="relative py-1 px-2 border rounded">Log out!</DangerButton>

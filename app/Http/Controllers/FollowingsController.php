@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewFollowerEvent;
 use App\Models\User;
 use App\Notifications\NewFollower;
 use Illuminate\Http\Request;
@@ -39,20 +40,22 @@ class FollowingsController extends Controller
         }
 
         $user = $request->user();
-        $followingUser = User::findOrFail($request->user);
+        $followedUser = User::findOrFail($request->user);
 
         //dd($user->id, $followingUser->id);
 
-        if($user->id === $followingUser->id) {
+        if($user->id === $followedUser->id) {
             return Inertia::render("Users/Show", [
                 "user" => $user,
             ]);
         }
 
-        if(!$user->following()->where("following_id", $followingUser->id)->exists()) {
-            $user->following()->attach($followingUser->id);
+        if(!$user->following()->where("following_id", $followedUser->id)->exists()) {
+            $user->following()->attach($followedUser->id);
 
-            $followingUser->notify(new NewFollower($user));
+            $followedUser->notify(new NewFollower($user));
+
+            event(new NewFollowerEvent($user, $user->id, $followedUser->id));
         }
     }
 
@@ -62,23 +65,20 @@ class FollowingsController extends Controller
     public function destroy(User $user)
     {
         if(!Auth::check() && !Auth::user()) {
-            return Inertia::render('Auth/Login', [
-                'canResetPassword' => Route::has('password.request'),
-                'status' => session('status'),
-            ]);
+            return redirect()->back();
         }
 
-        $unfollowingUser = User::findOrFail($user->id);
+        $unfollowedUser = User::findOrFail($user->id);
         $user = Auth::user();
 
-        if($user->id === $unfollowingUser->id) {
+        if($user->id === $unfollowedUser->id) {
             return Inertia::render("Users/Show", [
                 "user" => $user,
             ]);
         }
 
-        if($user->following->where("following_id", $unfollowingUser->id)) {
-            $user->following()->detach($unfollowingUser);
+        if($user->following->where("following_id", $unfollowedUser->id)) {
+            $user->following()->detach($unfollowedUser);
         }
     }
 }

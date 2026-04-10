@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\FollowingsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\NotificationController;
 use App\Models\User;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\Browsershot\Browsershot;
@@ -72,6 +73,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post("/replies/{reply}/like", [LikesController::class, "storeForReply"])->name("likeable.storeForReply");
     Route::delete("/replies/{reply}/dislike", [LikesController::class,"destroyForReply"])->name("likeable.destroyForReply");
+
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::get('/notifications/unread', [NotificationController::class, 'unread']);    
 });
 
 //needs to stay right here cause the show page blocks the create page

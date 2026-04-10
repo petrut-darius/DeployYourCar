@@ -6,6 +6,8 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { InertiaProgress } from '@inertiajs/progress';
 import { InertiaToast, toastStore } from '@laravel-inertia-toast/vue'
+import Pusher from 'pusher-js';
+import Echo from 'laravel-echo';
 
 InertiaProgress.init({
   color: '#29d',
@@ -13,6 +15,18 @@ InertiaProgress.init({
 });
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'reverb',
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wssPort: import.meta.env.VITE_REVERB_PORT,
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+    enabledTransports: ['ws', 'wss'],
+});
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
