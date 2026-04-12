@@ -2,19 +2,24 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
+use App\Models\Car;
+use App\Models\Reply;
 use Illuminate\Bus\Queueable;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 
-class NewFollower extends Notification
+class ReplyLiked extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private User $follower) {}
+    public function __construct(private User $commenter, private ?Car $car, private Reply $reply)
+    {
+        //
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -33,11 +38,16 @@ class NewFollower extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        $carContext = $this->car
+            ? "on the {$this->car->manufacture} {$this->car->model}"
+            : ""; 
+
         return [
-            "type" => "newFollower",
-            "message" => "{$this->follower->name} has started following you.",
-            "follower_id" => $this->follower->id,
-            "follower_name" => $this->follower->name,
+            "type" => "replyLiked",
+            "message" => "{$this->commenter->name} wrote something about your comment {$carContext}",
+            "commenter_id" => $this->commenter->id,
+            "commenter_name" => $this->commenter->name,
+            "reply_id" => $this->reply->id,
         ];
     }
 

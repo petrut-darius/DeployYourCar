@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CarLikedEvent;
+use App\Events\ReplyLikedEvent;
+use App\Notifications\CarLiked;
+use App\Notifications\ReplyLiked;
 use Illuminate\Http\Request;
 use App\Models\Car;
 use App\Models\Reply;
@@ -16,6 +20,10 @@ class LikesController extends Controller
 
         Cache::tags(["cars"])->flush();
 
+        $car->owner->notify(new CarLiked(auth()->user(), $car));
+
+        event(new CarLikedEvent(auth()->user(), $car));
+
         return redirect()->back();
     }
 
@@ -23,6 +31,12 @@ class LikesController extends Controller
         $reply->likes()->create([
             "user_id" => auth()->user()->id,
         ]);
+
+        $car = $reply->repliable instanceof Car ? $reply->repliable : null;
+
+        $reply->user->notify(new ReplyLiked(auth()->user(), $car, $reply));
+
+        event(new ReplyLikedEvent(auth()->user(), $reply));
 
         return redirect()->back();
     }
@@ -35,7 +49,7 @@ class LikesController extends Controller
 
     public function destroyForReply(Request $request, Reply $reply) {
         $reply->likes()->where("user_id", auth()->user()->id)->delete();
-    
+
         return redirect()->back();
     }
 }

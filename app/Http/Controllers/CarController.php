@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Actions\CreateCar;
 use App\Actions\UpdateCar;
 use InertiaToast\Facades\Toast;
-
+ 
 class CarController extends Controller
 {
     /**
@@ -55,12 +55,6 @@ class CarController extends Controller
                 ])->paginate(10);
             });
         }
-        
-        /*
-        Toast::success("Cars index page.");
-        Toast::error("Not cars show page.");
-        */
-
 
         return Inertia::render('Cars/Index', [
             'cars' => CarResource::collection($cars),
@@ -120,6 +114,8 @@ class CarController extends Controller
         $car = $createCar->execute($request->validated(), $request->user()->id);
 
         Cache::tags(["cars"])->flush();
+
+        Toast::success("Car created!");
 
         return redirect()->route("cars.show", ["car" => $car]);
     }
@@ -189,6 +185,8 @@ class CarController extends Controller
 
         Cache::tags(["cars"])->flush();
 
+        Toast::success("Car updated!");
+
         return redirect()->route("cars.show", ["car" => $car]);
     }
 
@@ -203,21 +201,21 @@ class CarController extends Controller
         Cache::forget("cars:show:{$car->id}");
         Cache::forget("cars:edit:{$car->id}");
 
+        Toast::error("Car deleted!");
+
         return redirect()->route("cars.index");
     }
 
     public function destroyPhoto(Car $car, $photo_id) {
         //dd($car->id, $photo_id);
-        $media = $car->media()->where("id", $photo_id)->where("collection_name", "cars")->first();
-
-        if(!$media) {
-            abort(404, "Photo not found");
-        }
+        $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::where("id", $photo_id)
+            ->where("model_id", $car->id)
+            ->where("model_type", Car::class)
+            ->where("collection_name", "cars")
+            ->firstOrFail();
 
         $media->delete();
 
         Cache::tags(["cars"])->flush();
-
-        return redirect("cars.index");
     }
 }

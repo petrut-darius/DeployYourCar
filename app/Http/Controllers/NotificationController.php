@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use InertiaToast\Facades\Toast;
 
 class NotificationController extends Controller
 {
@@ -32,6 +33,8 @@ class NotificationController extends Controller
     public function markAllAsRead()
     {
         auth()->user()->unreadNotifications->markAsRead();
+
+        Toast::success("You are up to date!");
 
         return response()->json(['ok' => true]);
     }

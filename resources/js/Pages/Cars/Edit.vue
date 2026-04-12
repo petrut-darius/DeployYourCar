@@ -7,25 +7,28 @@ import Tiptap from '@/Components/Tiptap.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm, usePage, router } from '@inertiajs/vue3';
 import DangerButton from '@/Components/DangerButton.vue';
+import { computed } from 'vue';
 
 const page = usePage()
 const user = page.props.auth.user
-const car = page.props.car
 const tags = page.props.tags
 const types = page.props.types
 
+const carData = page.props.car.data
+const car = computed(() => page.props.car)
+
 const form = useForm({
-    manufacture: car.data.manufacture ?? "",
-    model: car.data.model ?? "",
-    displacement: car.data.displacement?.toString() ?? "",
-    engineCode: car.data.engineCode ?? "",
-    whp: car.data.whp?.toString() ?? "",
-    color: car.data.color ?? "",
-    tags: car.data.tags?.map(t => t.id) ?? [],
-    types: car.data.types?.map(t => t.id) ?? [],
-    story: car.data.story?.bodyHtml ?? "plm",
+    manufacture: carData.manufacture ?? "",
+    model: carData.model ?? "",
+    displacement: carData.displacement?.toString() ?? "",
+    engineCode: carData.engineCode ?? "",
+    whp: carData.whp?.toString() ?? "",
+    color: carData.color ?? "",
+    tags: carData.tags?.map(t => t.id) ?? [],
+    types: carData.types?.map(t => t.id) ?? [],
+    story: carData.story?.bodyHtml ?? "plm",
     photos: [],
-    modifications: car.data.modifications ?? [
+    modifications: carData.modifications ?? [
         { name: "", description: "", reason: "" }
     ]
 });
@@ -65,7 +68,7 @@ const deletePhoto = async (carId, photoId) => {
 
     router.delete(route("cars.destroyPhoto", {car: carId, photo: photoId}), {
         preserveScroll: true,
-        forceFormData: true,
+        onSuccess: () => router.reload({ only: ['car']}),
     })
 };
 
@@ -207,24 +210,24 @@ const deletePhoto = async (carId, photoId) => {
                 <InputError :message="form.errors.photos" class="mt-2"/>
             </div>
 
-            <div class="mt-4">
-                <h2 class="text-center mb-4">Photos already published</h2>
-
-                <div class="flex flex-col items-center text-center">
-                    <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
-                        <img :src="photo.origianl_url" class="rounded shadow mx-auto" />
-                        <DangerButton @click="deletePhoto(car.data.id, photo.id)" class="mt-6">
-                            Delete photo
-                        </DangerButton>
-                    </div>
-                </div>
-            </div>
-
             <div class="mt-4 flex items-center justify-center">
                 <PrimaryButton class=" !text-white !bg-green-400 hover:!bg-green-800" :class="{'opacity-25': form.processing}" :disabled="form.processing">
                     Update Car
                 </PrimaryButton>
             </div>
         </form>
+
+            <div class="mt-4">
+                <h2 class="text-center mb-4">Photos already published</h2>
+
+                <div class="flex flex-col items-center text-center">
+                    <div v-for="photo in car.data.photos" :key="photo.id" class="w-full max-w-3xl p-6 rounded-xl shadow my-6 bg-gray-600">
+                        <img :src="photo.original_url" class="rounded shadow mx-auto" />
+                        <DangerButton @click="deletePhoto(car.data.id, photo.id)" class="mt-6">
+                            Delete photo
+                        </DangerButton>
+                    </div>
+                </div>
+            </div>
     </AppLayout>
 </template>

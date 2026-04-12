@@ -90,7 +90,7 @@ function handleClearAll() {
                     >
                         <!-- Icon by type -->
                         <div class="mt-0.5 shrink-0">
-                            <span v-if="notif.type === 'follower'" class="text-pink-400 text-lg">👤</span>
+                            <span v-if="notif.type == 'newFollower'" class="text-pink-400 text-lg">👤</span>
                             <span v-else class="text-blue-400 text-lg">🔔</span>
                         </div>
 

@@ -5,16 +5,20 @@ namespace App\Notifications;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use App\Models\Car;
 use Illuminate\Support\Carbon;
 
-class NewFollower extends Notification
+class CarLiked extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private User $follower) {}
+    public function __construct(private User $liker, private Car $car)
+    {
+        //
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -34,10 +38,10 @@ class NewFollower extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            "type" => "newFollower",
-            "message" => "{$this->follower->name} has started following you.",
-            "follower_id" => $this->follower->id,
-            "follower_name" => $this->follower->name,
+            "type" => "carLiked",
+            "message" => "{$this->liker->name} liked your car {$this->car->manufacture} {$this->car->model}.",
+            "liker_id" => $this->liker->id,
+            "liker_name" => $this->liker->name,
         ];
     }
 

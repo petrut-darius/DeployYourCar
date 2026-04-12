@@ -229,12 +229,12 @@ CREATE INDEX "replies_repliable_type_repliable_id_index" on "replies"(
 );
 CREATE TABLE IF NOT EXISTS "likes"(
   "id" integer primary key autoincrement not null,
-  "App\Models\User" integer not null,
+  "user_id" integer not null,
   "likeable_type" varchar not null,
   "likeable_id" integer not null,
   "created_at" datetime,
   "updated_at" datetime,
-  foreign key("App\Models\User") references "App\Models\Users"("id") on delete cascade
+  foreign key("user_id") references "users"("id") on delete cascade
 );
 CREATE INDEX "likes_likeable_type_likeable_id_index" on "likes"(
   "likeable_type",

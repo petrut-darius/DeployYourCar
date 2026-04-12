@@ -2,19 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Carbon;
 
-class NewFollower extends Notification
+class FollowingCarCreated extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private User $follower) {}
+    public function __construct()
+    {
+        //
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -23,7 +26,7 @@ class NewFollower extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail'];
     }
 
     /**
@@ -35,9 +38,9 @@ class NewFollower extends Notification
     {
         return [
             "type" => "newFollower",
-            "message" => "{$this->follower->name} has started following you.",
-            "follower_id" => $this->follower->id,
-            "follower_name" => $this->follower->name,
+            "message" => "{$this->commenter->name} wrote something about your car: {$this->car->manufacture} {$this->car->model}",
+            "commenter_id" => $this->commenter->id,
+            "commenter_name" => $this->commenter->name,
         ];
     }
 

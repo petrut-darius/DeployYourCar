@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CarCommentEvent;
+use App\Events\ReplyEvent;
+use App\Notifications\CarComment;
 use Illuminate\Http\Request;
 use App\Models\Reply;
 use App\Models\Car;
@@ -21,6 +24,10 @@ class RepliesController extends Controller
 
         Cache::tags(["cars"])->flush();
 
+        $car->owner->notify(new CarComment(auth()->user(), $car));
+
+        event(new CarCommentEvent(auth()->user(), $car));
+
         return redirect()->back();
     }
 
@@ -35,6 +42,12 @@ class RepliesController extends Controller
         ]);
 
         Cache::tags(["cars"])->flush();
+
+        $car = $reply->getRootCar();
+
+        $reply->user->notify(new \App\Notifications\Reply(auth()->user(), $car));
+
+        event(new ReplyEvent(auth()->user(), $car));
 
         return redirect()->back();
     }

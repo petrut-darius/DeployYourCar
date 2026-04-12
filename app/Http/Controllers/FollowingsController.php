@@ -6,9 +6,9 @@ use App\Events\NewFollowerEvent;
 use App\Models\User;
 use App\Notifications\NewFollower;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use InertiaToast\Facades\Toast;
+
 class FollowingsController extends Controller
 {
     /**
@@ -32,22 +32,19 @@ class FollowingsController extends Controller
      */
     public function store(Request $request)
     {
-        if(!$request->user()) {
-            return Inertia::render('Auth/Login', [
-                'canResetPassword' => Route::has('password.request'),
-                'status' => session('status'),
-            ]);
+        if(!Auth::check() && !Auth::user()) {
+            Toast::error("You must be logged in to follow someone!");    
+        
+            return redirect()->back();
         }
 
-        $user = $request->user();
+        $user = Auth::user();
         $followedUser = User::findOrFail($request->user);
 
-        //dd($user->id, $followingUser->id);
-
         if($user->id === $followedUser->id) {
-            return Inertia::render("Users/Show", [
-                "user" => $user,
-            ]);
+            Toast::error("You can't follow yourself!");
+
+            return redirect()->back();
         }
 
         if(!$user->following()->where("following_id", $followedUser->id)->exists()) {
@@ -72,9 +69,9 @@ class FollowingsController extends Controller
         $user = Auth::user();
 
         if($user->id === $unfollowedUser->id) {
-            return Inertia::render("Users/Show", [
-                "user" => $user,
-            ]);
+            Toast::error("Youu can't unfollow yourself!");
+
+            return redirect()->back();
         }
 
         if($user->following->where("following_id", $unfollowedUser->id)) {

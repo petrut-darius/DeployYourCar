@@ -1,9 +1,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { notificationHandlers } from "../notificationsHandlers"
 
 // Module-level state — created once, shared across all composable calls
 const notifications = ref([]);
 let echoChannel = null;
+let echoChannelName = null;
 let listenerRegistered = false;
 
 export function useNotifications() {
@@ -39,11 +41,25 @@ export function useNotifications() {
         notifications.value = [];
     }
 
+    function getXsrfToken() {
+        const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
+
     async function markAsRead(id) {
         // Optimistic update — flip it immediately, revert on failure
         const notif = notifications.value.find(n => n.id === id);
         if (!notif) return;
         notif.read = true;
+
+        const token = getXsrfToken();
+
+        if (!token) {
+            console.error('Missing XSRF token');
+            notif.read = false;
+            return;
+        }     
 
         try {
             await fetch(`/notifications/${id}/read`, {
@@ -51,15 +67,9 @@ export function useNotifications() {
                 credentials: "same-origin",
                 headers: {
                     'Accept': 'application/json',
-                    'X-XSRF-TOKEN': decodeURIComponent(
-                        document.cookie
-                            .split('XSRF-TOKEN=')[1]
-                            .split(';')[0]
-                    )
+                    'X-XSRF-TOKEN': token
                 },
             });
-
-            console.log(page.props.csrf_token);
         } catch (e) {
             // Revert on failure
             notif.read = false;
@@ -72,17 +82,21 @@ export function useNotifications() {
         const previous = notifications.value.map(n => ({ ...n }));
         notifications.value.forEach(n => n.read = true);
 
+        const token = getXsrfToken();
+
+        if (!token) {
+            console.error('Missing XSRF token');
+            notifications.value = previous
+            return;
+        }     
+    
         try {
             await fetch('/notifications/read-all', {
                 method: 'PATCH',
                 credentials: "same-origin",
                 headers: {
                     'Accept': 'application/json',
-                    'X-XSRF-TOKEN': decodeURIComponent(
-                        document.cookie
-                            .split('XSRF-TOKEN=')[1]
-                            .split(';')[0]
-                    )
+                    'X-XSRF-TOKEN': token
                 },
             });
         } catch (e) {
@@ -95,6 +109,10 @@ export function useNotifications() {
     onMounted(async () => {
         if (!user) return;
 
+        await fetch('/sanctum/csrf-cookie', {
+            credentials: 'same-origin'
+        });
+
         // Always fetch fresh unread from DB on first mount
         if (!listenerRegistered) {
             await fetchUnread();
@@ -102,15 +120,16 @@ export function useNotifications() {
 
         if (listenerRegistered) return;
 
-        echoChannel = window.Echo.private(`User.${user.id}.notifications`);
+        echoChannelName = `User.${user.id}.notifications`;
+        echoChannel = window.Echo.private(echoChannelName);
 
-        echoChannel.listen('.NewFollowerEvent', (e) => {
-            addNotification({
-                id: e.id, // use the real DB id from the event payload
-                type: 'follower',
-                message: `${e.follower.name} started following you!`,
-                time: new Date().toLocaleTimeString(),
-                read: false,
+        Object.entries(notificationHandlers).forEach(([event, transform]) => {
+            echoChannel.listen(event, (e) => {
+                addNotification({
+                    ...transform(e),
+                    time: new Date().toLocaleDateString(),
+                    read: false,
+                });
             });
         });
 
@@ -136,9 +155,11 @@ export function useNotifications() {
 // Call this explicitly on logout to clean up the Echo channel
 export function destroyNotifications() {
     if (echoChannel) {
-        echoChannel.stopListening('.NewFollowerEvent');
-        window.Echo.leave(echoChannel.name);
-        echoChannel = null;
+        Object.keys(notificationHandlers).forEach(event => {
+            echoChannel.stopListening(event);
+        });
+        window.Echo.leave(echoChannelName);
+        echoChannelName = null;
     }
     listenerRegistered = false;
     notifications.value = [];
