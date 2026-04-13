@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FollowingCarCreatedEvent;
+use App\Events\FollowingCarUpdatedEvent;
 use App\Models\Car;
+use App\Notifications\FollowingCarCreated;
+use App\Notifications\FollowingCarUpdated;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Requests\StoreCarRequest;
@@ -117,6 +121,13 @@ class CarController extends Controller
 
         Toast::success("Car created!");
 
+        $user = auth()->user();
+
+        foreach($user->followers()->get() as $follower) {
+            $follower->notify(new FollowingCarCreated($user, $car));
+            event(new FollowingCarCreatedEvent($user, $car, $follower));
+        }
+
         return redirect()->route("cars.show", ["car" => $car]);
     }
 
@@ -186,6 +197,13 @@ class CarController extends Controller
         Cache::tags(["cars"])->flush();
 
         Toast::success("Car updated!");
+
+        $user = auth()->user();
+
+        foreach($user->followers()->get() as $follower) {
+            $follower->notify(new FollowingCarUpdated($user, $car));
+            event(new FollowingCarUpdatedEvent($user, $car, $follower));
+        }
 
         return redirect()->route("cars.show", ["car" => $car]);
     }

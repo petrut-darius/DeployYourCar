@@ -32,12 +32,12 @@ export const notificationHandlers = {
     '.FollowingCarCreatedEvent': (e) => ({
         id: e.id,
         type: "followingCarCreated",
-        message: `${following.name} has posted their new car`
+        message: `${e.following.name} has posted their new car: ${e.car.manufacture} ${e.car.model}`
     }),
 
     '.FollowingCarUpdatedEvent': (e) => ({
         id: e.id,
         type: "followingCarUpdated",
-        message: `${following.name} has updated their car.`
+        message: `${e.following.name} has updated their car: ${e.car.manufacture} ${e.car.model}`
     }),
 };

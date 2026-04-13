@@ -9,7 +9,7 @@ class CreateCar
 {
     public function execute(array $data, int $userId): Car {
 
-        return DB::transaction(function() use ($data, $userId) {
+        $car = DB::transaction(function() use ($data, $userId) {
 
 
             $car = Car::create([
@@ -43,13 +43,15 @@ class CreateCar
             $car->tags()->sync($data['tags'] ?? []);
             $car->types()->sync($data['types'] ?? []);
 
-            if(!empty($data["photos"])) {
-                foreach((array) $data["photos"] as $photo) {
-                    $car->addMedia($photo)->toMediaCollection('cars', "cars");
-                }
-            }
-
             return $car;
         });
+
+        if(!empty($data["photos"])) {
+            foreach((array) $data["photos"] as $photo) {
+                $car->addMedia($photo)->toMediaCollection('cars', "cars");
+            }
+        }
+
+        return $car;
     }
 }

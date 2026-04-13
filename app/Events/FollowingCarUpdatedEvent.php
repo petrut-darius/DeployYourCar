@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Car;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,14 +12,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FollowingCarUpdatedEvent
+class FollowingCarUpdatedEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(private User $followed, private Car $car, private User $follower)
     {
         //
     }
@@ -28,9 +30,27 @@ class FollowingCarUpdatedEvent
      * @return array<int, Channel>
      */
     public function broadcastOn(): array
-    {
+    {   
         return [
-            new PrivateChannel('channel-name'),
+            new PrivateChannel("User.{$this->follower->id}.notifications"),
         ];
+    }
+
+    public function broadcastWith(): array {
+        return [
+            "following" => [
+                "id" => $this->followed->id,
+                "name" => $this->followed->name,
+            ],
+            "car" => [
+                "id" => $this->car->id,
+                "manufacture" => $this->car->manufacture,
+                "model" => $this->car->model,
+            ],
+        ];
+    }
+
+    public function broadcastAs(): string {
+        return "FollowingCarUpdatedEvent";
     }
 }

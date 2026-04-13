@@ -49,7 +49,7 @@ const submit = () => {
     form.transform(data => ({
         ...data,
         _method: "PUT",
-    })).post(route("cars.update", car.data.id), {
+    })).post(route("cars.update", car.value.data.id), {
         preserveScroll: true,
         forceFormData: true
     });

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class UpdateCar
 {
     public function execute(array $data, int $carId) {
-        return DB::transaction(function() use ($carId, $data) {
+        $car = DB::transaction(function() use ($carId, $data) {
             $car = Car::findOrFail($carId);
 
             $car->update([
@@ -56,13 +56,15 @@ class UpdateCar
             $car->tags()->sync($data['tags'] ?? []);
             $car->types()->sync($data['types'] ?? []);
 
-            if(!empty($data["photos"])) {
-                foreach((array) $data["photos"] as $photo) {
-                    $car->addMedia($photo)->toMediaCollection('cars', "cars");
-                }
-            }
-
             return $car;
         });
+
+        if(!empty($data["photos"])) {
+            foreach((array) $data["photos"] as $photo) {
+                $car->addMedia($photo)->toMediaCollection('cars', "cars");
+            }
+        }
+        
+        return $car;
     }
 }
