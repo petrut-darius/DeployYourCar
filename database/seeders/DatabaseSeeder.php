@@ -20,13 +20,72 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Permission::insert([
-            ["name" => "car:create", "description" => "Create car"],
-            ["name" => "car:update", "description" => "Update car"],
-            ["name" => "car:update-any", "description" => "Update any car"],
-            ["name" => "car:delete", "description" => "Delete car"],
-            ["name" => "car:delete-any", "description" => "Delete any car"],
-            ["name" => "user:create", "description" => "Create user"],
-            ["name" => "permission:create", "descritpion" => "Create permission"],
+            //cars
+            ["name" => "manage:cars", "description" => "Manage cars"],
+            ["name" => "create:cars", "description" => "Create cars"],
+            ["name" => "update:cars", "description" => "Update cars"],
+            ["name" => "delete:cars", "description" => "Delete cars"],
+            //groups
+            ["name" => "manage:groups", "description" => "Manage groups"],
+            ["name" => "create:groups", "description" => "Create groups"],
+            ["name" => "update:groups", "description" => "Update groups"],
+            ["name" => "delete:groups", "description" => "Delete groups"],
+            //modifications
+            ["name" => "manage:modifications", "description" => "Manage modifications"],
+            ["name" => "create:modifications", "description" => "Create modifications"],
+            ["name" => "update:modifications", "description" => "Update modifications"],
+            ["name" => "delete:modifications", "description" => "Delete modifications"],
+            //permissions
+            ["name" => "manage:permissions", "description" => "Manage permissions"],
+            ["name" => "create:permissions", "description" => "Create permissions"],
+            ["name" => "update:permissions", "description" => "Update permissions"],
+            ["name" => "delete:permissions", "description" => "Delete permissions"],
+            //replies
+            ["name" => "manage:replies", "description" => "Manage replies"],
+            ["name" => "create:replies", "description" => "Create replies"],
+            ["name" => "update:replies", "description" => "Update replies"],
+            ["name" => "delete:replies", "description" => "Delete replies"],
+            //stories
+            ["name" => "manage:stories", "description" => "Manage stories"],
+            ["name" => "create:stories", "description" => "Create stories"],
+            ["name" => "update:stories", "description" => "Update stories"],
+            ["name" => "delete:stories", "description" => "Delete stories"],
+            //tags
+            ["name" => "manage:tags", "description" => "Manage tags"],
+            ["name" => "create:tags", "description" => "Create tags"],
+            ["name" => "update:tags", "description" => "Update tags"],
+            ["name" => "delete:tags", "description" => "Delete tags"],
+            //types
+            ["name" => "manage:types", "description" => "Manage types"],
+            ["name" => "create:types", "description" => "Create types"],
+            ["name" => "update:types", "description" => "Update types"],
+            ["name" => "delete:types", "description" => "Delete types"],
+            //users
+            ["name" => "manage:users", "description" => "Manage users"],
+            ["name" => "create:users", "description" => "Create users"],
+            ["name" => "update:users", "description" => "Update users"],
+            ["name" => "delete:users", "description" => "Delete users"],
+        ]);
+
+        //tags
+        Tag::insert([
+            ["name" => "JDM"],
+            ["name" => "USDM"],
+            ["name" => "EDM"],
+            ["name" => "KDM"],
+            ["name" => "Euro"],
+            ["name" => "Aussie"],
+        ]);
+
+        //types
+        Type::insert([
+            ["name" => "Drift"],
+            ["name" => "Time Attack"],
+            ["name" => "Rally"],
+            ["name" => "Drag"],
+            ["name" => "Auotcross"],
+            ["name" => "Show Car"],
+            ["name" => "Daily Driver"],
         ]);
 
         $adminUser = User::factory()->create([
@@ -39,7 +98,8 @@ class DatabaseSeeder extends Seeder
                 "car:delete-any",
                 "user:create",
                 "permission:create",
-            ]
+            ],
+            "is_super_admin" => 1,
         ]);
 
         $authorEditorUser = User::factory()->create([
@@ -74,60 +134,6 @@ class DatabaseSeeder extends Seeder
             $story->car_id = $car->id;
 
             $story->save();
-        });
-
-        //tags
-        Tag::create([
-            "name" => "JDM",
-        ]);
-
-        Tag::create([
-            "name" => "USDM",
-        ]);
-
-        Tag::create([
-            "name" => "EDM",
-        ]);
-
-        Tag::create([
-            "name" => "KDM",
-        ]);
-
-        Tag::create([
-            "name" => "Euro",
-        ]);
-
-        Tag::create([
-            "name" => "Aussie",
-        ]);
-
-        //types
-        Type::create([
-            "name" => "Drift",
-        ]);
-
-        Type::create([
-            "name" => "Time Attack",
-        ]);
-
-        Type::create([
-            "name" => "Rally",
-        ]);
-
-        Type::create([
-            "name" => "Drag",
-        ]);
-
-        Type::create([
-            "name" => "Auotcross",
-        ]);
-
-        Type::create([
-            "name" => "Show Car",
-        ]);
-
-        Type::create([
-            "name" => "Daily Driver",
-        ]);
+        });        
     }
 }

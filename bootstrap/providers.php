@@ -2,5 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    Illuminate\Broadcasting\BroadcastServiceProvider::class
+    App\Providers\Filament\AdminPanelProvider::class,
+    Illuminate\Broadcasting\BroadcastServiceProvider::class,
 ];

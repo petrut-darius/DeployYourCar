@@ -71,38 +71,54 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(User::class, "follow_user", "following_id", "user_id");
     }
 
-    public function getAllPermissions() {
-
-        //Context = sesiune
-        if(Context::hasHidden("permissions")) {
-            return collect(Context::getHidden("permissions"));
-        }
-
-        //ia permisiunile de la fiecare group al userului
-        $groupPermissions = $this->groups()->with("permissions:name")->get()->pluck("permissions")->flatten()->pluck("name");
-
-        $permissions = collect($this->permissions ?? []);
-
-        $allPermissions = $groupPermissions->merge($permissions)->unique()->map(fn ($permission) => strtolower($permission));
-
-        Context::addHidden("permissions", $allPermissions);
-
-        return $allPermissions;
+    public function groups() {
+        return $this->belongsToMany(Group::class);
     }
 
-    public function getAllPermissionIds() {
+    public function cars() {
+        return $this->hasMany(Car::class);
+    }
 
-        //Context = sesiune
-        if(Auth::check() && Auth::user()->id === $this->id && Context::hasHidden("permissions")) {
-            return collect(Context::getHidden("permissions"))->values();
-        }
+    public function modifications() {
+        return $this->hasMany(Modification::class);
+    }
 
-        //ia permisiunile de la fiecare group al userului
-        $groupPermissionIds = $this->groups()->with("permissions:id")->get()->pluck("permissions")->flatten()->pluck("id");
+    public function stories() {
+        return $this->hasMany(Story::class);
+    }
 
-        $permissionIds = collect($this->permissions)->map(fn($name) => Permission::where("name", $name)->value("id"))->filter()->values();
+    public function isSuperAdmin() {
+        return $this->is_super_admin;
+    }
 
-        return $groupPermissionIds->merge($permissionIds)->unique()->values();
+    public function canAccessAdmin(): bool
+    {
+       if ($this->isSuperAdmin()) return true;
+       if (!empty($this->permissions)) return true;
+
+       return !empty($this->getAllPermissions());
+    }
+
+    public function getAllPermissions()
+    {
+        return cache()->remember(
+            "user_{$this->id}_permissions",
+            now()->addMinutes(10),
+            function () {
+                $groupPermissions = $this->groups()
+                    ->with("permissions:name")
+                    ->get()
+                    ->pluck("permissions")
+                    ->flatten()
+                    ->pluck("name");
+
+                return collect($this->permissions ?? [])
+                    ->merge($groupPermissions)
+                    ->unique()
+                    ->map(fn($p) => strtolower($p))
+                    ->values();
+            }
+        );
     }
 
     public function hasPermission($permission) {
@@ -126,22 +142,5 @@ class User extends Authenticatable implements MustVerifyEmail
 
         //verifica daca permisiunile date se afla in permisiunile din db
         return $this->getAllPermissions()->intersect($perms)->isNotEmpty();
-    }
-
-    public function groups() {
-        return $this->belongsToMany(Group::class);
-    }
-
-    public function cars() {
-        return $this->hasMany(Car::class);
-    }
-
-    public function modifications() {
-        return $this->hasMany(Modification::class);
-    }
-
-    public function stories() {
-        return $this->hasMany(Story::class);
-    }
-
+    }    
 }

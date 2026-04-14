@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS "users"(
   "email" varchar not null,
   "bio" text,
   "profile_image" varchar,
+  "is_super_admin" boolean not null DEFAULT 0,
   "email_verified_at" datetime,
   "password" varchar not null,
   "remember_token" varchar,
