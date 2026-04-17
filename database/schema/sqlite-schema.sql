@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS "migrations"(
 );
 CREATE TABLE IF NOT EXISTS "users"(
   "id" integer primary key autoincrement not null,
-  "permissions" text,
   "name" varchar not null,
   "email" varchar not null,
   "bio" text,
@@ -176,6 +175,15 @@ CREATE TABLE IF NOT EXISTS "permissions"(
   "description" varchar not null,
   "created_at" datetime,
   "updated_at" datetime
+);
+CREATE TABLE IF NOT EXISTS "user_permission" (
+  "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+  "user_id" integer NOT NULL,
+  "permission_id" integer NOT NULL,
+  "created_at" datetime,
+  "updated_at" datetime,
+  FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
+  foreign key("permission_id") references "permissions"("id") on delete cascade
 );
 CREATE TABLE IF NOT EXISTS "groups"(
   "id" integer primary key autoincrement not null,

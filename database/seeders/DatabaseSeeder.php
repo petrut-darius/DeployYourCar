@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -67,6 +68,21 @@ class DatabaseSeeder extends Seeder
             ["name" => "delete:users", "description" => "Delete users"],
         ]);
 
+        $editorGroup = Group::create(["name" => "editor"]);
+        $editorPermissions = Permission::whereIn("name", [
+            "update:cars",
+            "update:groups",
+            "update:modifications",
+            "update:permissions",
+            "update:replies",
+            "update:stories",
+            "update:tags",
+            "update:types",
+            "update:users",
+        ])->get();
+
+        $editorGroup->permissions()->attach($editorPermissions->pluck("id"));
+
         //tags
         Tag::insert([
             ["name" => "JDM"],
@@ -92,24 +108,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'thepdi',
             'email' => 'eminoviciidarius@gmail.com',
             "password" => "30ianpdi",
-            "permissions" => [
-                "car:create",
-                "car:update-any",
-                "car:delete-any",
-                "user:create",
-                "permission:create",
-            ],
             "is_super_admin" => 1,
         ]);
 
         $authorEditorUser = User::factory()->create([
             'name' => 'Author/Editor',
             'email' => 'ae@example.com',
-            "permissions" => [
-                "car:create",
-                "car:update-any",
-                "car:delete-any",
-            ]
         ]);
 
         $users = User::factory(20)->create();

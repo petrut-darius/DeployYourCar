@@ -18,4 +18,8 @@ class Permission extends Model
     public function group() {
         return $this->belongsToMany(Group::class);
     }
+
+    public function users() {
+        return $this->belongsToMany(User::class);
+    }
 }

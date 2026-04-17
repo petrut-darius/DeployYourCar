@@ -11,16 +11,15 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Operation;
 
 class UserForm
 {
-public static function configure(Schema $schema): Schema
+    public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
@@ -28,72 +27,83 @@ public static function configure(Schema $schema): Schema
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
-                            ->required(),
+                            ->required()
+                            ->maxLength(255),
 
                         TextInput::make('email')
                             ->label('Email address')
                             ->email()
-                            ->required(),
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true),
 
                         TextInput::make('password')
                             ->password()
+                            ->revealable()
                             ->required()
+                            ->minLength(8)
+                            ->dehydrateStateUsing(fn ($state) => filled($state) ? bcrypt($state) : null)
+                            ->dehydrated(fn ($state) => filled($state))
                             ->hiddenOn(Operation::Edit),
 
-                        DateTimePicker::make('email_verified_at'),
+                        DateTimePicker::make('email_verified_at')
+                            ->label('Email verified at')
+                            ->native(false),
 
                         Textarea::make('bio')
+                            ->rows(3)
                             ->columnSpanFull(),
 
                         FileUpload::make('profile_image')
                             ->image()
-                            ->columnSpanFull(),
+                            ->imageEditor()
+                            ->columnSpanFull()
+                            ->disk('public')
+                            ->directory('profile-images')
+                            ->visibility('public'),
                     ]),
 
-                Section::make('Group & Permissions')
+                Section::make('Groups & Permissions')
+                    ->description('Assign groups and individual permissions. Group permissions are inherited automatically.')
                     ->schema([
                         Select::make('groups')
-                            ->label('Groups')
                             ->relationship('groups', 'name')
                             ->multiple()
                             ->preload()
                             ->live()
-                            ->afterStateUpdated(function (Set $set, ?array $state) {
-                                if (empty($state)) {
-                                    $set('permissions', []);
-                                    return;
+                            ->searchable(),
+
+                        Placeholder::make('inherited_permissions')
+                            ->label('Permissions inherited from groups')
+                            ->content(function (Get $get): string {
+                                $groupIds = $get('groups');
+
+                                if (empty($groupIds)) {
+                                    return '—';
                                 }
 
-                                $groupPermissions = Group::whereIn('id', $state)
-                                    ->with('permissions')
+                                $names = Group::whereIn('id', $groupIds)
+                                    ->with('permissions:id,name')
                                     ->get()
-                                    ->flatMap(fn ($group) => $group->permissions->pluck('name'))
+                                    ->flatMap(fn (Group $group) => $group->permissions->pluck('name'))
                                     ->unique()
-                                    ->toArray();
+                                    ->sort()
+                                    ->values();
 
-                                $set('permissions', $groupPermissions);
-                            }),
-
-                        TextEntry::make('group_permissions_info')
-                            ->label('Permissions inherited from group')
-                            ->state(function (Get $get): string {
-                                $groupId = $get('group_id');
-                                if (!$groupId) return '—';
-
-                                return Group::find($groupId)
-                                    ?->permissions
-                                    ->pluck('name')
-                                    ->join(', ') ?: 'This group has no permissions.';
+                                return $names->isNotEmpty()
+                                    ? $names->join(', ')
+                                    : 'No permissions assigned to selected groups.';
                             })
-                            ->visible(fn (Get $get): bool => filled($get('group_id'))),
+                            ->visible(fn (Get $get): bool => filled($get('groups'))),
 
                         CheckboxList::make('permissions')
-                            ->label('Individual Permissions')
-                            ->options(
-                                Permission::query()->pluck('name', 'name')->toArray()
-                            )
-                            ->columns(2)
-                            ->helperText('Checked permissions are saved directly to this user regardless of group.'),
+                            ->label('Direct permissions')
+                            ->relationship('permissions', 'name')
+                            ->getOptionLabelFromRecordUsing(fn (Permission $record) => $record->name)
+                            ->columns(3)
+                            ->searchable()
+                            ->bulkToggleable()
+                            ->helperText('These are applied directly to the user, independent of any group.'),
                     ]),
             ]);
     }
